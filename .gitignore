@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #ignore folder
-/TestsExperiment
+TestsExperiment/
