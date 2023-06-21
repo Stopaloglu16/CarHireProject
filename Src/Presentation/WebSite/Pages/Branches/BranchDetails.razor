@@ -1,0 +1,339 @@
+﻿@page "/branchdetails/{branchId:int}"
+@attribute [Authorize]
+
+@using Application.Aggregates.BranchAggregate.Commands.Create
+@using Application.Aggregates.BranchAggregate.Commands.Update
+@using Application.Aggregates.BranchAggregate.Queries
+@using Application.Aggregates.CarAggregate.Queries
+@using Domain.Common
+@using Domain.Enums
+@using WebSite.Services
+@using Application.Aggregates.BranchAggregate.Commands
+@using CarHireRazorClassLibrary
+@using WebSite.Pages.Branches.Component
+
+@inject IWebApiService<BranchDto, BranchDto> branchDisplayService
+@inject IWebApiService<CreateBranchRequest, CreateBranchResponse> branchCreateService
+@inject IWebApiService<UpdateBranchRequest, UpdateBranchResponse> branchUpdateService
+@inject IWebApiService<CarDto, CarDto> carService
+
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <EditForm Model="@branchDto" OnValidSubmit="@SaveItem">
+                <DataAnnotationsValidator />
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Branch Detail
+                                </h3>
+                            </div>
+
+                            <div class="card-header border-0">
+                                <ServerValidations IsVisible="IsVisible" ResultType="ResultType" ActionText="@ActionName">
+                                    @RecordName
+                                </ServerValidations>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="form-group row">
+                                    <label for="ClientName" class="col-sm-3 col-form-label">Branch Name</label>
+                                    <InputText class="form-control form-control-sm col-9" @bind-Value="branchDto.BranchName" />
+                                    &nbsp;<ValidationMessage For="@(() => branchDto.BranchName)" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="Address1" class="col-sm-3 col-form-label">Address 1</label>
+                                    <InputText class="form-control form-control-sm col-9" @bind-Value="branchDto.Address.Address1" />
+                                    &nbsp;<ValidationMessage For="@(() => branchDto.Address.Address1)" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="Postcode" class="col-sm-3 col-form-label">Postcode</label>
+                                    <InputText class="form-control form-control-sm col-9" @bind-Value="branchDto.Address.Postcode" />
+                                    &nbsp;<ValidationMessage For="@(() => branchDto.Address.Postcode)" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="City" class="col-sm-3 col-form-label">City</label>
+                                    <InputText class="form-control form-control-sm col-9" @bind-Value="branchDto.Address.City" />
+                                    &nbsp;<ValidationMessage For="@(() => branchDto.Address.City)" />
+                                </div>
+
+                            </div>
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn-sm btn-primary float-right">Save</button>
+                            </div>
+                            <!-- /.card-footer -->
+                        </div>
+                    </div>  <!-- /.col-md-8 -->
+
+
+
+                    <div class="col-md-4">
+                        <div class="card card-primary card-outline">
+
+                            <div class="card-header">
+                                <h3 class="card-title">Cars</h3>
+
+                                <div class="card-tools">
+                                    <button class="btn btn-sm btn-outline-primary" type="button" @onclick="NavigateToEditCars"> <i class="fas fa-edit"></i>Edit</button>
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+
+                                @if (branchDto.Cars.Count == 0)
+                                {
+                                    <div class="alert alert-info alert-dismissible">
+                                        <h5><i class="icon fas fa-info"></i> Info!</h5>
+                                        No Car Found
+                                    </div>
+                                }
+                                else
+                                {
+
+                                    foreach (ChosenItem item in branchDto.Cars)
+                                    {
+                                        <div class="form-group row">
+                                            @item.ChosenName
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div><!-- /.col-12 -->
+
+            </EditForm>
+
+
+        </div>
+    </section>
+</div>
+
+@if (BranchCarsModalOpen)
+{
+    <BranchCarsModal createBranchCarsRequest="@createBranchCarsRequest"
+                 OnClose="@SaveBranchCarsModel">
+    </BranchCarsModal>
+}
+
+@*@if (BranchCarsModalOpen)
+{
+    <EmptyModal></EmptyModal>
+}*@
+
+
+@code {
+
+    [Parameter]
+    public int branchId { get; set; }
+
+    private string[] myHeader;
+
+    public BranchDto branchDto { get; set; }
+
+    private CreateBranchRequest? createBranchRequest { get; set; }
+    //private CreateBranchResponse createBranchResponse { get; set; }
+    private UpdateBranchRequest updateBranchRequest { get; set; }
+    //private UpdateBranchResponse updateBranchResponse { get; set; }
+
+
+
+    public bool IsVisible { get; set; }
+    public int ResultType { get; set; }
+    public string RecordName { get; set; }
+    public string ActionName { get; set; }
+
+    public bool BranchCarsModalOpen = false;
+    public CreateBranchCarsRequest createBranchCarsRequest { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        myHeader = new string[] { $"branchhome", "Branches", "Branch Detail" };
+
+        branchDto = new BranchDto();
+        createBranchCarsRequest = new CreateBranchCarsRequest();
+
+        var myTemp1 = new UpdateBranchResponse(0, null);
+
+
+        if (branchId == 0)
+        {
+            createBranchRequest = new CreateBranchRequest();
+            updateBranchRequest = new UpdateBranchRequest();
+            branchDto.Address = new Application.Aggregates.AddressAggregate.Queries.AddressDto();
+            branchDto.Cars = new List<ChosenItem>();
+        }
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (branchId > 0)
+            {
+                branchDto = await branchDisplayService.GetDataByIdAsync("/api/Branch/" + branchId);
+
+            }
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+
+    private async Task SaveItem()
+    {
+        //myClientResponse = new ClientCreateResponse();
+
+        IsVisible = false;
+
+        if (branchDto.Id == 0)
+        {
+            var myResponse = await branchCreateService.SaveAsync("/api/Branch", createBranchRequest);
+
+            if (myResponse.GetType() == typeof(CreateBranchResponse))
+            {
+
+                ActionName = ActionNameModel.Saved;
+
+            }
+            else
+            {
+
+            }
+
+        }
+        else if (branchDto.Id >= 0)
+        {
+            updateBranchRequest = new UpdateBranchRequest()
+                {
+                    Id = branchDto.Id,
+                    BranchName = branchDto.BranchName,
+                    Address = new Application.Aggregates.AddressAggregate.Queries.AddressDto()
+                    {
+                        Id = branchDto.Address.Id,
+                        Address1 = branchDto.Address.Address1,
+                        City = branchDto.Address.City,
+                        Postcode = branchDto.Address.Postcode
+                    },
+                    carChosenValues = new List<ChosenItem>()
+                };
+
+            updateBranchRequest.carChosenValues = branchDto.Cars.ToList();
+
+            var myResponse = await branchUpdateService.UpdateAsync("/api/Branch/", branchDto.Id, updateBranchRequest);
+
+
+            if (myResponse.GetType() == typeof(UpdateBranchResponse))
+            {
+
+                if (myResponse.basicErrorHandler == null)
+                {
+                    ActionName = ActionNameModel.Updated;
+
+                    toastService.ShowSuccess(ActionName);
+
+                    ResultType = 1;
+                    IsVisible = true;
+                    RecordName = updateBranchRequest.BranchName;
+                }
+                else
+                {
+                    toastService.ShowWarning("Please check warning message ");
+
+                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+
+                    ResultType = 3;
+                    IsVisible = true;
+                    RecordName = myResponse.basicErrorHandler.ErrorMessage;
+                }
+
+            }
+            else
+            {
+
+            }
+
+        }
+
+        StateHasChanged();
+
+    }
+
+
+    public async Task NavigateToEditCars()
+    {
+        createBranchCarsRequest = new CreateBranchCarsRequest();
+        createBranchCarsRequest.Cars = new List<ChosenItem>();
+
+        //Get all cars with branch
+        var cars = await carService.GetAllDataAsync("/api/Car");
+
+        foreach (var item in cars)
+        {
+            createBranchCarsRequest.Cars.Add(new ChosenItem()
+                {
+
+                    ChosenId = item.Id,
+                    ChosenName = String.Concat(item.NumberPlates, " (", item.BranchName, ")"),
+                    IsChosen = branchDto.Cars.Any(ss => ss.ChosenId == item.Id) ? true : false
+
+                });
+        }
+
+        BranchCarsModalOpen = true;
+
+        //StateHasChanged();
+    }
+
+
+    public async Task SaveBranchCarsModel(CreateBranchCarsRequest createBranchCarsRequest)
+    {
+
+        if (createBranchCarsRequest == null)
+        {
+            BranchCarsModalOpen = false;
+        }
+        else
+        {
+            branchDto.Cars = new List<ChosenItem>();
+
+            foreach (ChosenItem item in createBranchCarsRequest.Cars)
+            {
+                if (item.IsChosen) branchDto.Cars.Add(item);
+            }
+
+            BranchCarsModalOpen = false;
+        }
+
+        StateHasChanged();
+
+    }
+
+
+}
+

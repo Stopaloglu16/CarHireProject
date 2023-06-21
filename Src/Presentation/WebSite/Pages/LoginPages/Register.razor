@@ -1,0 +1,101 @@
+﻿@page  "/register/{username}/{mycode}"
+
+@using Domain.Entities.UserAuthAggregate.Register
+@using Newtonsoft.Json
+@using System.Security.Claims
+
+@using WebSite.Services
+@using Domain.Common
+@using Domain.Enums
+@using Domain.Entities.UserAuthAggregate
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IUserService userService
+@inject IJSRuntime jsRunTime
+
+<EditForm Model="@userModel" OnValidSubmit="@RegisterUser">
+    <DataAnnotationsValidator />
+
+    <div class="col-12 row">
+        <input class="form-control col-12" @bind="userModel.Username" placeholder="user name" disabled />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="userModel.Password" placeholder="password" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="userModel.ConfirmPassword" placeholder="password" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control offset-1 col-10 btn btn-primary" value="Register" />
+    </div>
+    <br />
+    <div class="col-12 row" style="text-align:left; font-weight:bold">
+        <span class="col-12">@RegisterMessage</span>
+    </div>
+
+</EditForm>
+
+@code {
+
+    private UserRegisterRequest userModel;
+    //private UserRegisterResponse myResponse;
+
+    public string RegisterMessage { get; set; }
+    ClaimsPrincipal claimsPrincipal;
+
+
+    [Parameter]
+    public string username { get; set; }
+
+    [Parameter]
+    public string mycode { get; set; }
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        //user = new User();
+        userModel = new UserRegisterRequest();
+
+        userModel.Username = username;
+        userModel.TokenConfirm = mycode;
+    }
+
+    private async Task<bool> RegisterUser()
+    {
+
+        if (!UserRegisterRequest.ValidatePassword(userModel.Password.ToString()))
+        {
+            RegisterMessage = "password!";
+            return await Task.FromResult(false);
+        }
+
+        var myResponse = await userService.RegisterUserAsync(userModel);
+
+
+        try
+        {
+
+            if (myResponse.basicErrorHandler.HasError)
+            {
+                RegisterMessage = myResponse.basicErrorHandler.ErrorMessage;
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/", false);
+            }
+        }
+        catch (Exception ex)
+        {
+
+            RegisterMessage = "System error";
+        }
+
+
+        return await Task.FromResult(false);
+    } }

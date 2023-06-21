@@ -1,0 +1,149 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace WebUI.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="WebUI.styles.css" rel="stylesheet" />
+
+
+      <!-- Google Font: Source Sans Pro -->
+  @*  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="AdminLTE-master/plugins/fontawesome-free/css/all.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="AdminLTE-master/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="AdminLTE-master/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="AdminLTE-master/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+
+
+    <!-- Select2 -->
+    <link rel="stylesheet" href="AdminLTE-master/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="AdminLTE-master/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="AdminLTE-master/dist/css/adminlte.min.css" />*@
+
+   @* <link href="~/css/site.css" rel="stylesheet" />*@
+
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed text-sm">
+
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+      <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="AdminLTE-master/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="AdminLTE-master/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="AdminLTE-master/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="AdminLTE-master/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="AdminLTE-master/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="AdminLTE-master/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+    <script src="AdminLTE-master/plugins/select2/js/select2.full.min.js"></script>
+
+    <!-- overlayScrollbars -->
+    <script src="AdminLTE-master/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="AdminLTE-master/dist/js/adminlte.js"></script>
+
+    <script src="~/js/site.js"></script>
+
+    <script src="_framework/blazor.server.js"></script>
+
+
+     <script>
+        // When the user clicks the button, the page scrolls to the top
+        function OnScrollEvent() {
+            document.documentElement.scrollTop = 0;
+        }
+
+
+        function Selectdropdown() {
+
+            $('.select2').select2();
+
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+        }
+
+
+        function downloadFile(filename) {
+            location.href =  filename;
+        }
+
+
+        function BlazorDownloadFile(filename, contentType, content) {
+            // Blazor marshall byte[] to a base64 string, so we first need to convert the string (content) to a Uint8Array to create the File
+            const data = base64DecToArr(content);
+
+            // Create the URL
+            const file = new File([data], filename, { type: contentType });
+            const exportUrl = URL.createObjectURL(file);
+
+            // Create the <a> element and click on it
+            const a = document.createElement("a");
+            document.body.appendChild(a);
+            a.href = exportUrl;
+            a.download = filename;
+            a.target = "_self";
+            a.click();
+
+            // We don't need to keep the url, let's release the memory
+            // On Safari it seems you need to comment this line... (please let me know if you know why)
+            URL.revokeObjectURL(exportUrl);
+        }
+
+        function b64ToUint6(nChr) {
+            return nChr > 64 && nChr < 91 ? nChr - 65 : nChr > 96 && nChr < 123 ? nChr - 71 : nChr > 47 && nChr < 58 ? nChr + 4 : nChr === 43 ? 62 : nChr === 47 ? 63 : 0;
+        }
+
+        function base64DecToArr(sBase64, nBlocksSize) {
+            var
+                sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""),
+                nInLen = sB64Enc.length,
+                nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2,
+                taBytes = new Uint8Array(nOutLen);
+
+            for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
+                nMod4 = nInIdx & 3;
+                nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
+                if (nMod4 === 3 || nInLen - nInIdx === 1) {
+                    for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3++, nOutIdx++) {
+                        taBytes[nOutIdx] = nUint24 >>> (16 >>> nMod3 & 24) & 255;
+                    }
+                    nUint24 = 0;
+                }
+            }
+            return taBytes;
+        }
+
+    </script>
+</body>
+</html>

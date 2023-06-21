@@ -1,0 +1,43 @@
+﻿
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid container-head-menu">
+
+        <div class="row mb-2">
+
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm">
+                    <li class="breadcrumb-item"><a href="home"> <i class="fas fa-home"></i>  Home</a></li>
+                    @if (PageName.Length == 1)
+                    {
+                        <li class="breadcrumb-item active">@PageName[0]</li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item"><a href="@PageName[0]">  @PageName[1]</a></li>
+                        <li class="breadcrumb-item active">@PageName[2]</li>
+                    }
+                </ol>
+            </div><!-- /.col -->
+
+            <div class="col-sm-6">
+
+            </div><!-- /.col -->
+
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+@code {
+
+    [Parameter]
+    public string[] PageName { get; set; }
+
+
+    [Parameter]
+    public EventCallback<string[]> PageNameChanged { get; set; }
+
+
+}

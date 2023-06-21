@@ -1,0 +1,290 @@
+﻿@page "/carmodeldetails/{CarModelId:int}/{carBrandId:int}"
+@attribute [Authorize]
+
+@using Application.Aggregates.CarModelAggregate.Commands.Create
+@using Application.Aggregates.CarModelAggregate.Commands.Update
+@using Application.Aggregates.CarModelAggregate.Queries
+@using Application.Aggregates.CarAggregate.Queries
+@using Domain.Common
+@using Domain.Enums
+@using WebSite.Services
+@using Application.Aggregates.CarModelAggregate.Commands
+@using CarHireRazorClassLibrary
+
+
+@inject IWebApiService<CarModelDto, CarModelDto> carModelDisplayService
+@inject IWebApiService<CreateCarModelRequest, CreateCarModelResponse> carModelCreateService
+@inject IWebApiService<UpdateCarModelRequest, UpdateCarModelResponse> carModelUpdateService
+@inject IWebApiService<CarDto, CarDto> carService
+
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <EditForm Model="@carModelDto" OnValidSubmit="@SaveItem">
+                <DataAnnotationsValidator />
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Carmodel Detail
+                                </h3>
+                            </div>
+
+                            <div class="card-header border-0">
+                                <ServerValidations IsVisible="IsVisible" ResultType="ResultType" ActionText="@ActionName">
+                                    @RecordName
+                                </ServerValidations>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="row">
+
+                                    <div class="col-md-6">
+
+                                        <div class="form-group row">
+                                            <img src="@carModelDto.CarPhoto" height="300" width="550" />
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputRecipient" class="col-md-3 col-sm-6 col-form-label-sm">Image</label>
+                                            <div class="col-md-9 col-sm-10">
+                                                <InputFile OnChange="@LoadImageFiles" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="form-group row">
+                                            <label for="Address1" class="col-sm-3 col-form-label">Name</label>
+                                            <InputText class="form-control form-control-sm col-9" @bind-Value="carModelDto.Name" />
+                                            &nbsp;<ValidationMessage For="@(() => carModelDto.Name)" />
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="Address1" class="col-sm-3 col-form-label">Seat number</label>
+                                            <InputNumber class="form-control form-control-sm col-9" @bind-Value="carModelDto.SeatNumber" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn-sm btn-primary float-right">Save</button>
+                            </div>
+                            <!-- /.card-footer -->
+                        </div>
+                    </div>  <!-- /.col-md-8 -->
+
+
+
+                </div><!-- /.col-12 -->
+
+            </EditForm>
+
+
+        </div>
+    </section>
+</div>
+
+
+
+@*@if (carmodelCarsModalOpen)
+{
+    <EmptyModal></EmptyModal>
+}*@
+
+
+@code {
+
+    [Parameter]
+    public int CarModelId { get; set; }
+
+
+    [Parameter]
+    public int carBrandId { get; set; }
+
+
+    private string[] myHeader;
+
+    public CarModelDto carModelDto { get; set; }
+
+    private CreateCarModelRequest? createCarModelRequest { get; set; }
+    private UpdateCarModelRequest updateCarModelRequest { get; set; }
+
+    public bool IsVisible { get; set; }
+    public int ResultType { get; set; }
+    public string RecordName { get; set; }
+    public string ActionName { get; set; }
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        myHeader = new string[] { $"CarModelHome", "CarModels", "CarModel Detail" };
+        carModelDto = new CarModelDto();
+
+        //if (CarModelId == 0)
+        //{
+        //    createCarModelRequest = new CreateCarModelRequest();
+        //}
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (CarModelId > 0)
+            {
+                carModelDto = await carModelDisplayService.GetDataByIdAsync("/api/CarModel/" + CarModelId);
+            }
+
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+
+    private async Task SaveItem()
+    {
+        //myClientResponse = new ClientCreateResponse();
+
+        IsVisible = false;
+
+        if (carModelDto.Id == 0)
+        {
+            createCarModelRequest = new CreateCarModelRequest(carModelDto.Name, carModelDto.CarPhoto, 0, carModelDto.SeatNumber, carBrandId);
+
+            var myResponse = await carModelCreateService.SaveAsync("/api/CarModel", createCarModelRequest);
+
+            if (myResponse.GetType() == typeof(CreateCarModelResponse))
+            {
+
+                if (myResponse.basicErrorHandler == null)
+                {
+                    toastService.ShowWarning("Please check warning message ");
+
+                    ResultType = 3;
+                    IsVisible = true;
+                    RecordName = "System error";
+                }
+                else if (myResponse.basicErrorHandler.HasError)
+                {
+                    toastService.ShowWarning("Please check warning message ");
+
+                    ResultType = 3;
+                    IsVisible = true;
+                    RecordName = myResponse.basicErrorHandler.ErrorMessage;
+                }
+                else
+                {
+                    ActionName = ActionNameModel.Saved;
+
+                    toastService.ShowSuccess(ActionName);
+
+                    ResultType = 1;
+                    IsVisible = true;
+                    RecordName = createCarModelRequest.Name;
+                }
+
+            }
+            else
+            {
+                toastService.ShowWarning("Please check warning message ");
+
+                ResultType = 3;
+                IsVisible = true;
+            }
+
+        }
+        else if (carModelDto.Id >= 0)
+        {
+
+            updateCarModelRequest = new UpdateCarModelRequest(carModelDto.Id, carModelDto.Name, carModelDto.CarPhoto, 0,
+                                                              carModelDto.SeatNumber, carBrandId);
+
+
+            var myResponse = await carModelUpdateService.UpdateAsync("/api/CarModel/", CarModelId, updateCarModelRequest);
+
+
+            if (myResponse.GetType() == typeof(UpdateCarModelResponse))
+            {
+                if (myResponse.basicErrorHandler.HasError)
+                {
+                    toastService.ShowWarning("Please check warning message ");
+
+                    ResultType = 3;
+                    IsVisible = true;
+                    RecordName = myResponse.basicErrorHandler.ErrorMessage;
+                }
+                else
+                {
+                    ActionName = ActionNameModel.Updated;
+
+                    toastService.ShowSuccess(ActionName);
+
+                    ResultType = 1;
+                    IsVisible = true;
+                    RecordName = updateCarModelRequest.Name;
+                }
+            }
+            else
+            {
+                toastService.ShowWarning("Please check warning message ");
+
+                ResultType = 3;
+                IsVisible = true;
+            }
+
+        }
+
+        StateHasChanged();
+
+    }
+
+
+
+    public async Task LoadImageFiles(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            foreach (var file in e.GetMultipleFiles(1))
+            {
+                string format = "image/jpeg";
+                var myfile = await file.RequestImageFileAsync(format, 300, 300);
+
+                var buffer = new byte[myfile.Size];
+
+                await myfile.OpenReadStream().ReadAsync(buffer);
+
+                var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+                carModelDto.CarPhoto = imageData;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+
+
+}
+

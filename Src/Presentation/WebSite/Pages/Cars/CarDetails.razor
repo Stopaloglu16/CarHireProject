@@ -1,0 +1,398 @@
+﻿@page "/cardetails/{CarId:int}"
+@attribute [Authorize]
+
+@using Application.Aggregates.CarAggregate.Commands.Create
+@using Application.Aggregates.CarAggregate.Commands.Update
+@using Application.Aggregates.CarAggregate.Queries
+@using Domain.Common
+@using Domain.Enums
+@using WebSite.Services
+@using Application.Aggregates.CarAggregate.Commands
+@using CarHireRazorClassLibrary
+
+@inject IWebApiService<CarDto, CarDto> CarDisplayService
+@inject IWebApiService<CreateCarRequest, CreateCarResponse> carCreateService
+@inject IWebApiService<UpdateCarRequest, UpdateCarResponse> carUpdateService
+@inject IWebApiService<SelectListItem, SelectListItem> selectListService
+@inject IWebApiService<CarDto, CarDto> carService
+
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <EditForm Model="@carDto" OnValidSubmit="@SaveItem">
+                <DataAnnotationsValidator />
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Car Detail
+                                </h3>
+                            </div>
+
+                            <div class="card-header border-0">
+                                <ServerValidations IsVisible="IsVisible" ResultType="ResultType" ActionText="@ActionName">
+                                    @RecordName
+                                </ServerValidations>
+                            </div>
+
+                            <div class="card-body">
+
+                                <div class="form-group row">
+                                    <label for="BranchName" class="col-sm-2 col-form-label">Branch</label>
+                                    <select class="form-control col-md-3" @bind="carDto.BranchId">
+                                        @if (branchList != null)
+                                        {
+                                            <option value="0">Branches</option>
+                                            @foreach (var myitem in branchList)
+                                            {
+                                                <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="CarBrandName" class="col-sm-2 col-form-label">Car Brand</label>
+                                    <select class="form-control col-md-3" @onchange="carBrandListChangeEvent">
+                                        @if (carBrandList != null)
+                                        {
+                                            <option value="0">Car Brands</option>
+                                            @foreach (var myitem in carBrandList)
+                                            {
+                                                <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                            }
+                                        }
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="CarModelName" class="col-sm-2 col-form-label">Car Model</label>
+                                    <select class="form-control col-md-3" @bind="carDto.CarModelId">
+                                        @if (carModelList != null)
+                                        {
+                                            <option value="0">Select car model</option>
+                                            @foreach (var myitem in carModelList)
+                                            {
+                                                <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                            }
+                                        }
+                                    </select>
+
+                                </div>
+
+
+
+                                <div class="form-group row">
+                                    <label for="ClientName" class="col-sm-2 col-form-label">Plate</label>
+                                    <InputText class="form-control form-control-sm col-3" @bind-Value="carDto.NumberPlates" />
+                                    &nbsp;<ValidationMessage For="@(() => carDto.NumberPlates)" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="Address1" class="col-sm-2 col-form-label">Mileage</label>
+                                    <InputNumber class="form-control form-control-sm col-3" @bind-Value="carDto.Mileage" />
+                                    &nbsp;<ValidationMessage For="@(() => carDto.Mileage)" />
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="Postcode" class="col-sm-2 col-form-label">Cost Perday</label>
+                                    <InputNumber class="form-control form-control-sm col-3" @bind-Value="carDto.Costperday" />
+                                    &nbsp;<ValidationMessage For="@(() => carDto.Costperday)" />
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="Gearbox" class="col-sm-2 col-form-label">Gearbox</label>
+                                    <InputRadioGroup  @bind-Value="carDto.GearboxId">
+                                       <InputRadio  Value="0" /> Manual
+                                        <InputRadio  Value="1" /> Auto
+                                    </InputRadioGroup>
+                                </div>
+
+
+@*                                <div class="form-group row">
+                                    <label for="Gearbox" class="col-sm-2 col-form-label">Gearbox</label>
+                                    <InputRadioGroup  @bind-Value="@carDto.GearboxId">
+                                        @foreach (var i in Enum.GetValues(typeof(Gearbox)))
+                                        {
+                                <InputRadio class="form-check-input" Value="i" />
+                                            <text>&nbsp;</text>
+
+                                            @i.ToString()
+                                            <br>
+                                        }
+                                    </InputRadioGroup>
+                                </div>*@
+
+
+                            </div>
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn-sm btn-primary float-right">Save</button>
+                            </div>
+                            <!-- /.card-footer -->
+                        </div>
+                    </div>  <!-- /.col-md-8 -->
+
+
+
+                </div><!-- /.col-12 -->
+
+            </EditForm>
+
+
+        </div>
+    </section>
+</div>
+
+
+@code {
+
+    [Parameter]
+    public int CarId { get; set; }
+
+    private string[] myHeader = new string[] { $"carshome", "Cars", "Car Detail" };
+
+    public CarDto carDto { get; set; }
+
+    private CreateCarRequest? createCarRequest { get; set; }
+    //private CreateCarResponse createCarResponse { get; set; }
+    private UpdateCarRequest updateCarRequest { get; set; }
+    //private UpdateCarResponse updateCarResponse { get; set; }
+
+    public List<SelectListItem> branchList { get; set; }
+    public List<SelectListItem> carBrandList { get; set; }
+    public List<SelectListItem> carModelList { get; set; }
+
+
+    public bool IsVisible { get; set; }
+    public int ResultType { get; set; }
+    public string RecordName { get; set; }
+    public string ActionName { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        carDto = new CarDto();
+        carDto.Id = CarId;
+        carDto.GearboxId = 0;
+
+        if (CarId == 0) createCarRequest = new CreateCarRequest("", null, 0, 0, 0);
+
+        branchList = new List<SelectListItem>();
+        carBrandList = new List<SelectListItem>();
+        carModelList = new List<SelectListItem>();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadBranchList();
+
+            await LoadCarBrands();
+
+            if (CarId > 0)
+            {
+                carDto = await CarDisplayService.GetDataByIdAsync("/api/Car/GetByCarId/" + CarId);
+            }
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+
+
+    #region Branch
+
+    private async Task LoadBranchList()
+    {
+        branchList = new List<SelectListItem>();
+        branchList = await selectListService.GetAllDataAsync("/api/Branch/GetList");
+
+        StateHasChanged();
+    }
+
+    public async void branchListChangeEvent(ChangeEventArgs e)
+    {
+        var branchId = Convert.ToInt32(e.Value);
+
+        if( branchId > 0)
+        {
+            carDto.BranchId = branchId;
+        }
+        else
+        {
+            carDto.BranchId = null;
+        }
+
+    }
+
+    #endregion
+
+
+    #region CarBrand
+
+    int chosenCarBrandId = 0;
+
+    private async Task LoadCarBrands()
+    {
+        carBrandList = new List<SelectListItem>();
+        carBrandList = await selectListService.GetAllDataAsync("/api/Carbrand/GetList");
+
+        StateHasChanged();
+    }
+
+    public async void carBrandListChangeEvent(ChangeEventArgs e)
+    {
+        chosenCarBrandId = Convert.ToInt32(e.Value);
+
+        if (chosenCarBrandId > 0)
+        {
+            await LoadCarModels();
+        }
+    }
+
+    #endregion
+
+
+    #region CarModel
+
+    private async Task LoadCarModels()
+    {
+        carModelList = new List<SelectListItem>();
+        carModelList = await selectListService.GetAllDataAsync($"/api/CarModel/GetList/{chosenCarBrandId}");
+
+        StateHasChanged();
+    }
+
+    public async void carModelListChangeEvent(ChangeEventArgs e)
+    {
+        carDto.CarModelId = Convert.ToInt32(e.Value);
+
+    }
+
+    #endregion
+
+
+    private async Task SaveItem()
+    {
+        
+        IsVisible = false;
+
+        if (carDto.Id == 0)
+        {
+            createCarRequest = new CreateCarRequest(carDto.NumberPlates, carDto.BranchId, carDto.CarModelId, carDto.GearboxId, carDto.Mileage, carDto.Costperday);
+
+            var myResponse = await carCreateService.SaveAsync("/api/Car", createCarRequest);
+
+            if (myResponse.GetType() == typeof(CreateCarResponse))
+            {
+                if (myResponse.basicErrorHandler == null)
+                {
+                    toastService.ShowWarning("Please check warning message ");
+
+                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+
+                    ResultType = 3;
+                    IsVisible = true;
+                    RecordName = myResponse.basicErrorHandler.ErrorMessage;
+                }
+                else
+                {
+                    ActionName = ActionNameModel.Saved;
+
+                    toastService.ShowSuccess(ActionName);
+
+                    ResultType = 1;
+                    IsVisible = true;
+                    RecordName = createCarRequest.NumberPlates;
+                }
+            }
+            else
+            {
+                toastService.ShowWarning("System error");
+
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+
+                ResultType = 3;
+                IsVisible = true;
+                RecordName = myResponse.basicErrorHandler.ErrorMessage;
+            }
+        }
+        else if (carDto.Id >= 0)
+        {
+            updateCarRequest = new UpdateCarRequest(carDto.Id,
+                                                    carDto.NumberPlates.ToString(),
+                                                    carDto.BranchId,
+                                                    carDto.CarModelId,
+                                                    carDto.GearboxId,
+                                                    carDto.Mileage,
+                                                    carDto.Costperday);
+
+            var myResponse = await carUpdateService.UpdateAsync("/api/Car/", carDto.Id, updateCarRequest);
+
+
+            if (myResponse.GetType() == typeof(UpdateCarResponse))
+            {
+
+                if (myResponse.basicErrorHandler == null)
+                {
+                    toastService.ShowWarning("Please check warning message ");
+
+                    await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+
+                    ResultType = 3;
+                    IsVisible = true;
+                    RecordName = myResponse.basicErrorHandler.ErrorMessage;
+                }
+                else
+                {
+                    ActionName = ActionNameModel.Updated;
+
+                    toastService.ShowSuccess(ActionName);
+
+                    ResultType = 1;
+                    IsVisible = true;
+                    RecordName = updateCarRequest.NumberPlates;
+                }
+
+            }
+            else
+            {
+                toastService.ShowWarning("System error");
+
+                await JSRuntime.InvokeVoidAsync("OnScrollEvent");
+
+                ResultType = 3;
+                IsVisible = true;
+                RecordName = myResponse.basicErrorHandler.ErrorMessage;
+            }
+
+        }
+
+        StateHasChanged();
+
+    }
+
+
+}
+

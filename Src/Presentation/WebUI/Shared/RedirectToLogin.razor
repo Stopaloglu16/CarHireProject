@@ -1,0 +1,14 @@
+﻿@inject NavigationManager Navigation
+
+
+    @code {
+        protected override void OnInitialized()
+        {
+            Navigation.NavigateTo($"/login");
+
+            //https://docs.microsoft.com/en-us/aspnet/core/blazor/security/webassembly/standalone-with-authentication-library?view=aspnetcore-5.0&tabs=visual-studio#redirecttologin-component
+        }
+    }
+
+
+    

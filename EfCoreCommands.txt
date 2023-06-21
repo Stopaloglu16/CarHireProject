@@ -1,0 +1,3 @@
+Add-Migration 15ct -Context Infrastructure.Data.ApplicationDbContext
+
+update-database -Context Infrastructure.Data.ApplicationDbContext

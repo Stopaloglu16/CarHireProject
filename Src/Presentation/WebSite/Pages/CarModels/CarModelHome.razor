@@ -1,0 +1,261 @@
+﻿@page "/carmodelhome"
+
+@using Domain.Common
+@using Domain.Enums
+@using WebSite.Services
+@using Application.Aggregates.CarModelAggregate.Queries
+@using CarHireRazorClassLibrary
+
+@inject IWebApiService<CarModelDto, CarModelDto> CarModelService
+@inject IWebApiService<SelectListItem, SelectListItem> selectListService
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="col-12">
+
+                <div class="card card-primary card-outline">
+                    <div class="card-header row">
+
+                        <div class="col-auto mr-auto">
+
+                            <select class="form-control" @onchange="carBrandListChangeEvent">
+                                @if (carBrandList != null)
+                                {
+                                    <option value="-1">Select car model</option>
+                                    @foreach (var myitem in carBrandList)
+                                    {
+                                        <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-primary" @onclick="NavigateToAddCarModel"> <i class="fas fa-plus"></i> New</button>
+                        </div>
+
+                    </div>
+                    <div class="card-body col-md-6">
+
+                        @if (myCarModelList.Count > 0)
+                        {
+                            <TableTemplate Items="myCarModelList" >
+                                <TableHeader>
+                                    <th>Name</th>
+                                    <th>Seat</th>
+                                    <th>Action</th>
+                                </TableHeader>
+                                <RowTemplate Context="myRowModel">
+                                    <td>
+                                        <button class="btn btn-link" @onclick="() => NavigateToEditCarModel(myRowModel.Id)"> @myRowModel.Name</button>
+                                    </td>
+                                    <td>
+                                        @myRowModel.SeatNumber
+                                    </td>
+                                    <th>
+                                        <button class="btn btn-outline-danger btn-sm" @onclick="() => ActionItem(myRowModel.Id, myRowModel.Name, 1)">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </th>
+                                </RowTemplate>
+                            </TableTemplate>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <h6><i class="icon fas fa-info"></i> Info!</h6>
+                                No data found
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div><!-- /.col-12 -->
+
+        </div>
+    </section>
+</div>
+
+
+
+@if (ActionPerItemModalOpen)
+{
+    <ActionPerItemModal ActionItemText="@ActionItemText"
+                    ActionText="@ActionName"
+                    OnCloseModal="@OnActionPerItemModalClose">
+    </ActionPerItemModal>
+}
+
+@code {
+
+    public bool IsActive { get; set; } = true;
+
+    private string[] myHeader = new string[] { "CarModels" };
+
+    public List<CarModelDto> myCarModelList { get; set; }
+
+
+    public List<SelectListItem> carBrandList { get; set; }
+
+    private bool ActionPerItemModalOpen { get; set; } = false;
+
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthStat { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var usser = (await AuthStat).User;
+
+        if (!usser.Identity.IsAuthenticated)
+        {
+            navigationManager.NavigateTo("/Login", false);
+        }
+
+        myCarModelList = new List<CarModelDto>();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadCarBrandList();
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    private async Task LoadCarBrandList()
+    {
+        carBrandList = await selectListService.GetAllDataAsync("/api/CarBrand/GetList");
+        StateHasChanged();
+    }
+
+
+    public int chosenCarBrandId = 0;
+
+    public async void carBrandListChangeEvent(ChangeEventArgs e)
+    {
+        chosenCarBrandId = Convert.ToInt32(e.Value);
+
+        if (chosenCarBrandId > 0)
+        {
+
+            await LoadCarModels();
+        }
+    }
+
+
+    private async Task LoadCarModels()
+    {
+        //Deleted item is 1(true) on db
+        myCarModelList = new List<CarModelDto>();
+        myCarModelList = await CarModelService.GetAllDataAsync("/api/CarModel/GetDataList/" + chosenCarBrandId);
+
+        StateHasChanged();
+    }
+
+
+    private void NavigateToAddCarModel()
+    {
+        navigationManager.NavigateTo($"CarModeldetails/0/{chosenCarBrandId}");
+    }
+
+    private void NavigateToEditCarModel(int ChosenId)
+    {
+        navigationManager.NavigateTo($"carmodeldetails/{ChosenId.ToString()}/{chosenCarBrandId}");
+    }
+
+
+
+
+    public string ModalClassAction;
+    public string ModalDisplayAction = "none;";
+
+    private int ItemIdAction;
+    private string ActionItemText = "";
+
+
+    public bool IsVisible { get; set; }
+    public int ResultType { get; set; }
+    public string ActionName { get; set; }
+    public string ActionText { get; set; }
+    private int ActionTypeId { get; set; }
+
+    public void ActionItem(int _ItemId, string _ItemName, int _ActionTypeId)
+    {
+
+        ItemIdAction = _ItemId;
+        ActionItemText = _ItemName;
+        ActionTypeId = _ActionTypeId;
+
+        if (ActionTypeId == 1)
+        {
+            ActionName = ActionNameModel.Delete;
+        }
+        else if (ActionTypeId == 2)
+        {
+            ActionName = ActionNameModel.Restore;
+        }
+
+        ActionPerItemModalOpen = true;
+
+    }
+
+
+
+    private async Task OnActionPerItemModalClose(bool RtnAction)
+    {
+        if (RtnAction == false)
+        {
+            ActionPerItemModalOpen = false;
+        }
+        else
+        {
+
+            bool IsSuccess = false;
+
+            if (ActionTypeId == 1)
+            {
+                IsSuccess = await CarModelService.DeleteAsync($"/api/CarModel/{ItemIdAction}");
+            }
+            else if (ActionTypeId == 2)
+            {
+                IsSuccess = await CarModelService.DeleteAsync($"/api/CarModel/restore/{ItemIdAction}");
+            }
+
+            if (IsSuccess)
+            {
+                toastService.ShowSuccess($"{ActionItemText} {ActionName}d");
+
+                ActionPerItemModalOpen = false;
+                await LoadCarModels();
+
+            }
+            else
+            {
+                ActionPerItemModalOpen = false;
+            }
+
+        }
+    }
+
+}
+

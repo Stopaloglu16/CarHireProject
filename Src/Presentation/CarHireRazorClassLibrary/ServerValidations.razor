@@ -1,0 +1,85 @@
+﻿@if (IsVisible)
+{
+    @if (ResultType == 1)  //success
+    {
+        <div id="divValidationMessage" class="col-10 alert alert-success row">
+            <div class="col-11" style="text-align:left">
+                <span><i class="icon fas fa-check"></i> @ChildContent has been @ActionText successfully</span>
+            </div>
+            <div class="col-1" style="text-align:right">
+                <a style="text-underline-position:below; cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }
+    else if (ResultType == 2) //info
+    {
+        <div id="divValidationMessage" class="col-10 alert alert-info row">
+            <div class="col-11" style="text-align:left">
+                <span><i class="icon fas fa-info"></i> @ChildContent </span>
+            </div>
+            <div class="col-1" style="text-align:right">
+                <a style="text-underline-position:below; cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }
+    else if (ResultType == 3) //warning
+    {
+        <div id="divValidationMessage" class="col-10 alert alert-warning row">
+            <div class="col-11" style="text-align:left">
+                <span> <i class="icon fas fa-exclamation-triangle"></i>  @ChildContent </span>
+            </div>
+            <div class="col-1" style="text-align:right">
+                <a style="text-underline-position:below; cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }
+    else if (ResultType == 4) //danger
+    {
+        <div id="divValidationMessage" class="col-10 alert alert-danger row">
+            <div class="col-11" style="text-align:left">
+                <span><i class="icon fas fa-ban"></i>System Error! Please contact system admin</span>
+            </div>
+            <div class="col-1" style="text-align:right">
+                <a style="text-underline-position:below; cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div id="divValidationMessage" class="col-10 alert alert-danger row">
+            <div class="col-11" style="text-align:left">
+                <span style="font-style:italic; font-weight:bold">Oops, something went wrong. Please contact system admin.</span>
+            </div>
+            <div class="col-1" style="text-align:right">
+                <a style="text-underline-position:below; cursor:pointer" @onclick="(() => CloseValidation())">x</a>
+            </div>
+        </div>
+    }           }
+
+@code {
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public int ResultType { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string ActionText { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //Result = false; ///authorService.CheckConnection();
+        //IsVisible = true;
+        await base.OnParametersSetAsync();
+    }
+
+    private void CloseValidation()
+    {
+        IsVisible = false;
+    }
+
+}

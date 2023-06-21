@@ -1,0 +1,144 @@
+﻿@typeparam TItem
+
+
+<div class="col-12">
+
+    <div class="card-header">
+        <div class="col-6">
+            <select class="custom-select col-3" value="@PageSize" @onchange="PageSizeChangeEvent">
+
+                <option value="5">5</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+
+            </select>
+        </div>
+
+    </div>
+    <div class="card-body">
+
+        <table id="pn-TableTemplate" class="table">
+            <thead>
+                <tr>
+                    @TableHeader
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ItemList)
+                {
+                    <tr>
+                        @RowTemplate(item)
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </div>
+    <div class="card-footer">
+        <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item"><button class="btn btn-link" @onclick="@(e => NavigateTo("prev"))">«</button></li>
+            <li class="page-item"><button class="btn @(CurrentPage == 0? "btn-dark":"btn-link")" @onclick="() => UpdateList(0)">1</button></li>
+
+            @if (TotalPages > 7)
+            {
+
+                <li class="page-item"><button class="btn @(CurrentPage >= 4?"disabled":"")  @(CurrentPage == 1? "btn-dark" : "btn-link")" @onclick="() => UpdateList(1)">@(CurrentPage >= 4?"…":"2")</button></li>
+
+                <li class="page-item"><button class="btn @(CurrentPage == 2? "btn-dark" : "btn-link")" @onclick="() => UpdateList(CurrentPage >= 4? (CurrentPage <= TotalPages-4 ?CurrentPage-1: TotalPages - 5):2)">@(CurrentPage >= 4? (CurrentPage <= TotalPages - 4 ? CurrentPage : TotalPages - 4) : "3")</button></li>
+                <li class="page-item"><button class="btn @(CurrentPage == 3||(CurrentPage >= 4&&CurrentPage <=(TotalPages -4))? "btn-dark" : "btn-link")" @onclick="() => UpdateList(CurrentPage >= 4?CurrentPage:3)">@(CurrentPage >= 4?(CurrentPage <= TotalPages - 4 ? CurrentPage + 1 : TotalPages - 3) : "4")</button></li>
+                <li class="page-item"><button class="btn @(CurrentPage == TotalPages - 3? "btn-dark" : "btn-link")" @onclick="() => UpdateList(CurrentPage >= 4? (CurrentPage <= TotalPages-4 ?CurrentPage+1: TotalPages - 3):4)">@(CurrentPage >= 4? (CurrentPage <= TotalPages-4 ?CurrentPage+2: TotalPages - 2): "5")</button></li>
+
+                <li class="page-item"><button class="btn @(CurrentPage >= TotalPages - 4?"":"disabled") @(CurrentPage == TotalPages-2? "btn-dark" : "btn-link")" @onclick="() => UpdateList(TotalPages-2)">@(CurrentPage >= (TotalPages-4)? (TotalPages-1):"…")</button></li> 
+            }
+            else
+            {
+                @for (int i = 1; i < TotalPages - 1; i++)
+                {
+                    var pageNumber = i;
+                    <li class="page-item"><button class="btn @(CurrentPage == pageNumber ? "btn-dark" : "btn-link")" @onclick="() => UpdateList(pageNumber)">@(i + 1)</button></li>              
+                }            
+            }
+
+            <li class="page-item"><button class="btn @(CurrentPage == TotalPages-1? "btn-dark":"btn-link")" @onclick="() => UpdateList(TotalPages-1)">@TotalPages</button></li>
+            <li class="page-item"><button class="btn btn-link" @onclick="@(e => NavigateTo("next"))">»</button> </li>
+        </ul>
+    </div>
+
+</div>
+
+
+@code { 
+
+    [Parameter]
+    public RenderFragment TableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> RowTemplate { get; set; }
+
+    [Parameter]
+    public List<TItem> Items { get; set; }
+
+
+    public List<TItem> ItemList { get; set; }
+
+    public int PageSize { get; set; }
+    public int TotalPages { get; set; }
+    public int CurrentPage { get; set; }
+
+    protected override void OnInitialized()
+    {
+        PageSize = 5;
+
+        CalculatePagesize();
+
+        base.OnInitialized();
+    }
+
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+        base.OnAfterRender(firstRender);
+    }
+
+
+    private void CalculatePagesize()
+    {
+        ItemList = Items.Take(PageSize).ToList();
+
+        TotalPages = (int)Math.Ceiling(Items.Count() / (decimal)PageSize);
+
+    }
+
+    private void UpdateList(int pageNumber)
+    {
+        ItemList = Items.Skip(pageNumber * PageSize).Take(PageSize).ToList();
+        CurrentPage = pageNumber;
+    }
+
+    private void NavigateTo(string direction)
+    {
+        if (direction == "prev" && CurrentPage != 0)
+        {
+            CurrentPage -= 1;
+        }
+        else if (direction == "next" && CurrentPage != TotalPages - 1)
+        {
+            CurrentPage += 1;
+        }
+
+        UpdateList(CurrentPage);
+    }
+
+    public async void PageSizeChangeEvent(ChangeEventArgs e)
+    {
+        PageSize = Convert.ToInt32(e.Value);
+
+        CalculatePagesize();
+
+        await Task.Delay(10);
+    }
+
+}

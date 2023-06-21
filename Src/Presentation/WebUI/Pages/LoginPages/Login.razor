@@ -1,0 +1,106 @@
+﻿
+@page  "/login"
+@using Domain.Entities.UserAuthAggregate.Login
+@using WebUI.Data
+@using Newtonsoft.Json
+@using WebUI.Services
+@using System.Security.Claims
+@using Domain.Entities.UserAuthAggregate
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IUserService userService
+@inject IJSRuntime jsRunTime
+
+<EditForm Model="@userModel" OnValidSubmit="@ValidateUser">
+    <DataAnnotationsValidator />
+
+    <div class="col-12 row">
+        <input class="form-control col-12" @bind="userModel.Username" placeholder="user name" />
+        &nbsp;<ValidationMessage For="@(() => userModel.Username)" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <input type="password" class="form-control col-12" @bind="userModel.Password" placeholder="password" />
+        &nbsp;<ValidationMessage For="@(() => userModel.Password)" />
+    </div>
+    <br />
+    <div class="col-12 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control offset-1 col-10 btn btn-primary" value="Login" />
+    </div>
+    <br />
+    <div class="col-12 row" style="text-align:left; font-weight:bold">
+        <span class="col-12">@LoginMesssage</span>
+    </div>
+
+</EditForm>
+
+@code {
+
+
+    //private User user;
+    private UserLoginRequest userModel;
+    public string LoginMesssage { get; set; }
+    ClaimsPrincipal claimsPrincipal;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        //user = new User();
+        userModel = new UserLoginRequest();
+
+        var authState = await authenticationStateTask;
+        var user1 = authState.User;
+
+        claimsPrincipal = (await authenticationStateTask).User;
+
+        if (claimsPrincipal.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/home2", false);
+        }
+        else
+        {
+            userModel.Username = "demouser";
+            userModel.Password = "Password@123";
+            //userModel.Username = "";
+            //userModel.Password = "";
+        }
+
+    }
+
+    private async Task<bool> ValidateUser()
+    {
+        //assume that user is valid
+        //call an API
+
+        var returnedUser = await userService.LoginAsync(userModel);
+
+        try
+        {
+            if (returnedUser.UserName != null)
+            {
+
+                ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(returnedUser);
+
+                NavigationManager.NavigateTo("/home2", false);
+
+            }
+            else
+            {
+                LoginMesssage = "Invalid username or password";
+            }
+        }
+        catch (Exception ex)
+        {
+
+            LoginMesssage = ex.Message;
+        }
+
+
+        return await Task.FromResult(true);
+    }
+}

@@ -1,0 +1,232 @@
+﻿@page "/branchome"
+
+
+@using Domain.Enums
+@using WebSite.Services
+@using Application.Aggregates.BranchAggregate.Queries
+@using CarHireRazorClassLibrary
+
+@inject IWebApiService<BranchDto, BranchDto> branchService
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="col-12">
+
+                <div class="card card-primary card-outline">
+                    <div class="card-header row">
+
+                        <AuthorizeView Roles="branchmanage">
+                            <div class="col-sm-1">
+                                <button class="btn btn-sm btn-outline-primary" @onclick="NavigateToAddBranch"> <i class="fas fa-plus"></i> New</button>
+                            </div>
+                        </AuthorizeView>
+
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" checked="checked" class="custom-control-input" id="customSwitch1" @onchange="() => LoadBranches(!IsActive)">
+                                    <label class="custom-control-label" for="customSwitch1">Active</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+
+                        @if (myBranchList.Count > 0)
+                        {
+                            <TableTemplate Items="myBranchList">
+                                <TableHeader>
+                                    <th>Branch Name</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </TableHeader>
+                                <RowTemplate Context="myRowModel">
+                                    <td>
+                                       <button class="btn btn-link" @onclick="() => NavigateToEditBranch(myRowModel.Id)"> @myRowModel.BranchName</button>
+                                    </td>
+                                    <td>
+                                        @myRowModel.Address.Address1 - @myRowModel.Address.Postcode - <b>@myRowModel.Address.City</b>
+                                    </td>
+                                    <th>
+                                         <button class="btn btn-outline-danger btn-sm" @onclick="() => ActionItem(myRowModel.Id, myRowModel.BranchName, 1)"> 
+                                             <i class="fas fa-trash-alt"></i>
+                                         </button>
+                                    </th>
+                                </RowTemplate>
+                            </TableTemplate>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info">
+                                <h6><i class="icon fas fa-info"></i> Info!</h6>
+                                No data found
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div><!-- /.col-12 -->
+
+        </div>
+    </section>
+</div>
+
+
+
+@if (ActionPerItemModalOpen)
+{
+    <ActionPerItemModal ActionItemText="@ActionItemText"
+                        ActionText="@ActionName"
+                        OnCloseModal="@OnActionPerItemModalClose">
+    </ActionPerItemModal>
+}
+
+@code {
+
+    public bool IsActive { get; set; } = true;
+
+    private string[] myHeader = new string[] { "Branches" };
+
+    public List<BranchDto> myBranchList { get; set; }
+
+    private bool ActionPerItemModalOpen { get; set; } = false;
+
+    [CascadingParameter]
+    protected Task<AuthenticationState> AuthStat { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var usser = (await AuthStat).User;
+
+        if (!usser.Identity.IsAuthenticated)
+        {
+            navigationManager.NavigateTo("/Login", false);
+        }
+
+        myBranchList = new List<BranchDto>();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            await LoadBranches(IsActive);
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+
+    }
+
+    private async Task LoadBranches(bool _IsActive)
+    {
+        //Deleted item is 1(true) on db
+        myBranchList = await branchService.GetAllDataAsync("/api/branch?IsActive=" + _IsActive);
+
+        StateHasChanged();
+    }
+
+
+    private void NavigateToAddBranch()
+    {
+        navigationManager.NavigateTo($"branchdetails/0");
+    }
+
+    private void NavigateToEditBranch(int ChosenId)
+    {
+        navigationManager.NavigateTo("branchdetails/" + ChosenId.ToString());
+    }
+
+
+
+
+    public string ModalClassAction;
+    public string ModalDisplayAction = "none;";
+
+    private int ItemIdAction;
+    private string ActionItemText = "";
+
+
+    public bool IsVisible { get; set; }
+    public int ResultType { get; set; }
+    public string ActionName { get; set; }
+    public string ActionText { get; set; }
+    private int ActionTypeId { get; set; }
+
+    public void ActionItem(int _ItemId, string _ItemName, int _ActionTypeId)
+    {
+
+        ItemIdAction = _ItemId;
+        ActionItemText = _ItemName;
+        ActionTypeId = _ActionTypeId;
+
+        if (ActionTypeId == 1)
+        {
+            ActionName = ActionNameModel.Delete;
+        }
+        else if (ActionTypeId == 2)
+        {
+            ActionName = ActionNameModel.Restore;
+        }
+
+        ActionPerItemModalOpen = true;
+
+    }
+
+
+
+    private async Task OnActionPerItemModalClose(bool RtnAction)
+    {
+        if (RtnAction == false)
+        {
+            ActionPerItemModalOpen = false;
+        }
+        else
+        {
+
+            bool IsSuccess = false;
+
+            if (ActionTypeId == 1)
+            {
+                IsSuccess = await branchService.DeleteAsync($"/api/Branch/{ItemIdAction}");
+            }
+            else if (ActionTypeId == 2)
+            {
+                IsSuccess = await branchService.DeleteAsync($"/api/Branch/restore/{ItemIdAction}");
+            }
+
+            if (IsSuccess)
+            {
+                toastService.ShowSuccess($"{ActionItemText} {ActionName}d");
+
+                ActionPerItemModalOpen = false;
+                await LoadBranches(IsActive);
+
+            }
+            else
+            {
+                ActionPerItemModalOpen = false;
+            }
+
+        }
+    } 
+
+}
+

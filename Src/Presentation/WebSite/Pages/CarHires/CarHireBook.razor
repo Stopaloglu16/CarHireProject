@@ -1,0 +1,238 @@
+﻿@page "/carhirebook"
+
+@using Application.Aggregates.CarExtraAggregate.Queries
+@using Application.Aggregates.CarHireAggregate.Commands.Create
+@using Application.Aggregates.CarHireAggregate.Queries
+@using Domain.Common
+@using Domain.Enums
+@using WebSite.Services
+@using CarHireRazorClassLibrary
+
+@inject IWebApiService<CarHireBookDisplay, CarHireBookDisplay> carHireBookDisplayService
+@inject IWebApiService<CarExtraDto, CarExtraDto> carExtraDtoService
+@inject IWebApiService<CreateCarHireCommand, int> carHireService
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="col-12">
+
+                <div class="card card-primary card-outline">
+                    <div class="card-header row" style="border-bottom:1px solid ">
+                        Review and proceed to booking
+                    </div>
+
+
+                    <div class="card-body pt-4">
+
+                        <div class="row">
+
+                            <div class="col-md-9 border">
+
+                                @if (carHireBookDisplay != null)
+                                {
+                                    <form class="border-1 ">
+
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <img style="height:250px;width:400px" src="@carHireBookDisplay.CarPhoto" />
+                                            </div>
+                                            <div class="col-6">
+
+                                                <div class="form-group">
+                                                    <h4>   @carHireBookDisplay.CarDescription </h4>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <span class="h5">  @carHireBookDisplay.PickLocation </span> > <span class="h5">  @carHireBookDisplay.ReturnLocation  </span><br>
+                                                    @carHireBookDisplay.PickDatetime.ToString("dd/MMM/yyyy hh:mm")   @carHireBookDisplay.ReturnDatetime.ToString("dd/MMM/yyyy hh:mm")
+                                                </div>
+
+                                                <div class="form-group col-md-5" style="box-shadow: 5px 3px 3px 3px #dc3545">
+                                                    <h4>
+                                                        Total cost
+                                                        <strong> £@TotalCost </strong>
+                                                    </h4>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </form>
+
+                                    <form class="border-top pt-1">
+
+                                        <div class="form-group row">
+                                            <label for="staticEmail" class="col-sm-2 col-form-label">Cardholder's name</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="staticEmail">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Card Number</label>
+                                            <div class="col-sm-8">
+                                                <input type="tel" class="form-control" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" id="cardnumber">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">Expiery</label>
+                                            <div class="col-sm-3">
+                                                <input type="datetime-local" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputPassword" class="col-sm-2 col-form-label">CVC</label>
+                                            <div class="col-sm-3">
+                                                <input type="tel" class="form-control" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="3" placeholder="xxx" id="inputCsv">
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+                                    <div class="card-footer" style="border-top:0.5px solid ">
+                                        <button type="button" class="btn btn-sm btn-primary float-right"  @onclick="SubmitBookCar" > Book Now </button>
+                                    </div>
+
+                                }
+                            </div>
+
+                            <div class="col-md-3">
+
+                                <label>Car Extras</label>  <br />
+                                @if (carExtras != null)
+                                {
+
+                                    foreach (var item in carExtras)
+                                    {
+                                        <input type="checkbox" value=item.Cost @onchange="args=>TogglePattern(args, item)" /> @item.Name <br />
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div class="alert alert-info col-md5">
+                                        <h5><i class="icon fas fa-info"></i> Info!</h5>
+                                        <h6>No car extra found </h6>
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /.col-12 -->
+
+        </div>
+    </section>
+</div>
+
+
+
+
+
+@code {
+
+    public bool IsActive { get; set; } = true;
+
+    private string[] myHeader = new string[] { "Car Booking" };
+
+    public List<CarExtraDto> carExtras { get; set; }
+
+    public CarHireBookDisplay carHireBookDisplay { get; set; }
+
+    public ChosenItemList chosenItemList { get; set; }
+
+    public int maxChosenCost = 0;
+
+    public decimal TotalCost = 0;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        carHireBookDisplay = new CarHireBookDisplay(0, "", "carDescription", 0, "pickLocation", DateTime.Now,
+                                                                        0, "returnLocation", DateTime.Now, 0);
+
+        //getAvailableCarsQuery = new GetAvailableCarsQuery();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            //await LoadBranchList();
+            carHireBookDisplay = await carHireBookDisplayService.GetDataByIdAsync($"/api/CarHire/GetCarHireBookDisplay");
+
+            if (carHireBookDisplay == null) 
+                navigationManager.NavigateTo($"carhireSearch");
+
+            carExtras = await carExtraDtoService.GetAllDataAsync($"/api/CarExtra");
+
+            TotalCost = carHireBookDisplay.Totalcost;
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    private async Task TogglePattern(ChangeEventArgs args, CarExtraDto item)
+    {
+        item.IsSelected = !item.IsSelected;
+        TotalCost = item.IsSelected?TotalCost + item.Cost:TotalCost - item.Cost;
+    }
+
+
+
+    private void SubmitBookCar()
+    {
+
+        ChosenItemList myList = new ChosenItemList();
+        myList.myList = new List<ChosenItem>();
+
+        foreach (var item in carExtras)
+        {
+            if (item.IsSelected)
+                myList.myList.Add(new ChosenItem() { ChosenId = item.Id, ChosenName = item.Name });
+
+        }
+
+
+        var createCarHireCommand = new CreateCarHireCommand(carHireBookDisplay.CarId, 0, carHireBookDisplay.PickLocationId, carHireBookDisplay.PickDatetime, carHireBookDisplay.PickDatetime,
+            carHireBookDisplay.ReturnLocationId, carHireBookDisplay.ReturnDatetime, carHireBookDisplay.ReturnDatetime, 0, TotalCost, myList);
+
+
+        var myRtn = carHireService.SaveAsync("/api/CarHire", createCarHireCommand);
+
+        
+
+        //int carId, int userId, int pickUpBranchId, DateTime pickUpDate, DateTime pickUpDateTime, 
+        //                            int returnBranchId, DateTime returnDate, DateTime returnDateTime, int returnMileage, 
+        //                            decimal bookingCost, ChosenItemList carExtras
+
+
+    //    navigationManager.NavigateTo($"carhirebook/{carId}");
+    }
+
+
+
+}
+

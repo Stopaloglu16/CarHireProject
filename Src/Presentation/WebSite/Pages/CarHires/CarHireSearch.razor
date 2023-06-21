@@ -1,0 +1,436 @@
+﻿@page "/carhire"
+
+@using Application.Aggregates.CarAggregate.Queries
+@using Application.Aggregates.CarHireAggregate.Queries
+@using Domain.Common
+@using Domain.Enums
+@using WebSite.Services
+@using CarHireRazorClassLibrary
+
+@inject IWebApiService<CarHireCarDto, CarHireCarDto> carHireCarDtoService
+@inject IWebApiService<CarHireBookDisplay, CarHireBookDisplay> carHireBookDisplayService
+@inject IWebApiService<SelectListItem, SelectListItem> selectListService
+@inject CarHireRazorClassLibrary.Services.IToastService toastService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager navigationManager
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+    <ContentHeader @bind-PageName="@myHeader"></ContentHeader>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="col-12">
+
+
+                <div class="card card-primary card-outline">
+                    <div class="card-header row" style="border-bottom:1px solid ">
+
+                        <div class="col-md-3">
+                            <label class="control-label"> Pickup location</label>
+                            <select class="form-control" @onchange="pickupBranchListChangeEvent">
+                                @if (pickupBranchList != null)
+                                {
+                                    <option value="0">Pickup From</option>
+                                    @foreach (var myitem in pickupBranchList)
+                                    {
+                                        <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="control-label">Pickup date</label>
+                            <input type="datetime-local" class="form-control" @bind-value="pickupDate" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="control-label">Return location </label>
+                            <select class="form-control" @onchange="returnBranchListChangeEvent">
+                                @if (pickupBranchList != null)
+                                {
+                                    <option value="0">Drop To</option>
+                                    @foreach (var myitem in returnBranchList)
+                                    {
+                                        <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="control-label">Return date</label>
+                            <input type="datetime-local" class="form-control" @bind-value="returnDate" />
+                        </div>
+
+                        <div class="col-auto">
+                            <button class="btn btn-sm btn-primary mt-4 p-2" @onclick="SearchAvaialableCars"> <i class="fa fa-search"></i> Search</button>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body pt-4">
+
+                        <div class="row">
+
+                            <div class="col-md-2" style="height:600px">
+
+                                <div class="col-md-*">
+                                    @if (@mycarFilteredList != null)
+                                    {
+                                        <div class="callout callout-info">
+                                            <strong>@mycarFilteredList.Count.ToString() cars found</strong>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="col-md-*">
+
+                                    <select class="form-control" @onchange="carBrandListChangeEvent">
+                                        @if (carBrandList != null)
+                                        {
+                                            <option value="0">Car Brands</option>
+                                            @foreach (var myitem in carBrandList)
+                                            {
+                                                <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                            }
+                                        }
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-* pt-2 ">
+
+                                    <select class="form-control" @onchange="carModelListChangeEvent">
+                                        @if (carModelList != null)
+                                        {
+                                            <option value="0">Car models</option>
+                                            @foreach (var myitem in carModelList)
+                                            {
+                                                <option value=@myitem.ItemId>@myitem.ItemName</option>
+                                            }
+                                        }
+                                    </select>
+
+                                </div>
+
+                                <div class="col-md-* pt-4">
+                                    <label class="small">Max Cost (£@chosenCost)</label>
+                                    <input type="range" class="custom-range" min="@minChosenCost" max="@maxChosenCost" step="1" @bind-value="@chosenCost" @oninput="@((args) => CostRangeChange(args.Value.ToString()))" />
+                                </div>
+
+                            </div>
+                            <div class="col-md-10">
+
+
+                                @if (mycarFilteredList.Count > 0)
+                                {
+                                    <div class="card-columns">
+                                        @foreach (var myCarItems in mycarFilteredList)
+                                        {
+                                            <div class="card card-info card-outline">
+
+                                                <div class="card-header">
+                                                    <span class="font-weight-bold"> @myCarItems.CarBrandName </span>
+                                                    <span class="float-right"> @myCarItems.CarModelName </span>
+                                                </div>
+                                                <div class="card-body pt-0  bg-gradient-light">
+
+                                                    <div class="row ">
+
+                                                        <div class="col-md-11">
+                                                            <img style="height:150px;width:250px" src="@myCarItems.CarPhoto" />
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="card-footer" style="border-top:0.5px solid ">
+                                                    <span style="font-size:15px"> @myCarItems.GearboxName - £@myCarItems.Costperday/daily <br> £@(myCarItems.Costperday * dateCount)/total </span>
+                                                    <button class="btn btn-sm btn-primary float-right" @onclick="() => NavigateToBookcar(myCarItems.Id)"> Book </button>
+                                                </div>
+
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-4">
+
+                                        <div class="alert alert-info col-md5">
+                                            <h5><i class="icon fas fa-info"></i> Info!</h5>
+                                            <h6>No car found </h6>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div><!-- /.col-12 -->
+
+        </div>
+    </section>
+</div>
+
+
+
+
+
+@code {
+
+    public bool IsActive { get; set; } = true;
+
+    private string[] myHeader = new string[] { "cars" };
+
+    public List<CarHireCarDto> mycarList { get; set; }
+    public List<CarHireCarDto> mycarFilteredList { get; set; }
+
+    public List<SelectListItem> pickupBranchList { get; set; }
+    public DateTime pickupDate { get; set; } = new DateTime();
+    public List<SelectListItem> returnBranchList { get; set; }
+    public DateTime returnDate { get; set; } = new DateTime();
+
+
+    public List<SelectListItem> carBrandList { get; set; }
+    public List<SelectListItem> carModelList { get; set; }
+
+    public List<int> carCostList { get; set; }
+
+    public int chosenPickupBranchId = 0;
+    public int chosenReturnBranchId = 0;
+    public string chosenPickupBranchName = string.Empty;
+    public string chosenReturnBranchName = string.Empty;
+
+    public int chosenCarBrandId = 0;
+    public int chosenCarModelId = 0;
+
+    public int chosenCost = 0;
+    public int minChosenCost = 0;
+    public int maxChosenCost = 0;
+
+    public int dateCount = 0;
+
+    public GetAvailableCarsQuery getAvailableCarsQuery { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        mycarList = new List<CarHireCarDto>();
+        mycarFilteredList = new List<CarHireCarDto>();
+
+        pickupBranchList = new List<SelectListItem>();
+        returnBranchList = new List<SelectListItem>();
+
+        carBrandList = new List<SelectListItem>();
+        carModelList = new List<SelectListItem>();
+
+        pickupDate = DateTime.Now;
+        returnDate = DateTime.Now;
+
+
+        getAvailableCarsQuery = new GetAvailableCarsQuery();
+
+        await base.OnInitializedAsync();
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadBranchList();
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    #region Branch
+
+    private async Task LoadBranchList()
+    {
+        pickupBranchList = new List<SelectListItem>();
+        pickupBranchList = await selectListService.GetAllDataAsync("/api/Branch/GetList");
+
+        returnBranchList = pickupBranchList;
+
+        StateHasChanged();
+    }
+
+    public async void pickupBranchListChangeEvent(ChangeEventArgs e)
+    {
+        chosenPickupBranchId = Convert.ToInt32(e.Value);
+
+    }
+
+    public async void returnBranchListChangeEvent(ChangeEventArgs e)
+    {
+        chosenReturnBranchId = Convert.ToInt32(e.Value);
+    }
+
+    #endregion
+
+
+    #region CarBrand
+
+    private async Task LoadCarBrands()
+    {
+        carBrandList = new List<SelectListItem>();
+        carBrandList = await selectListService.GetAllDataAsync("/api/Carbrand/GetList");
+
+        StateHasChanged();
+    }
+
+    public async void carBrandListChangeEvent(ChangeEventArgs e)
+    {
+        chosenCarBrandId = Convert.ToInt32(e.Value);
+
+        if (chosenCarBrandId > 0)
+        {
+            //mycarFilteredList = mycarList.Where(ss => ss.CarBrandId == chosenCarBrandId).ToList();
+            PutCarFilters();
+            await LoadCarModels();
+        }
+        else
+        {
+            PutCarFilters();
+        }
+    }
+
+    #endregion
+
+
+    #region CarModel
+
+    private async Task LoadCarModels()
+    {
+        //Deleted item is 1(true) on db
+        carModelList = new List<SelectListItem>();
+        carModelList = await selectListService.GetAllDataAsync($"/api/CarModel/GetList/{chosenCarBrandId}");
+
+        StateHasChanged();
+    }
+
+    public void carModelListChangeEvent(ChangeEventArgs e)
+    {
+        chosenCarModelId = Convert.ToInt32(e.Value);
+
+        PutCarFilters();
+
+    }
+
+    #endregion
+
+    #region CostRangeSlider
+
+    public void CostRangeChange(string step)
+    {
+
+        chosenCost = Convert.ToInt32(step);
+
+        PutCarFilters();
+    }
+
+    #endregion
+
+
+    public void PutCarFilters()
+    {
+
+        mycarFilteredList = mycarList;
+
+        if (chosenCarBrandId > 0) mycarFilteredList = mycarFilteredList.Where(ss => ss.CarBrandId == chosenCarBrandId).ToList();
+        if (chosenCarModelId > 0) mycarFilteredList = mycarFilteredList.Where(ss => ss.CarModelId == chosenCarModelId).ToList();
+        if (chosenCost > 0) mycarFilteredList = mycarFilteredList.Where(ss => ss.Costperday <= chosenCost).ToList();
+
+
+        StateHasChanged();
+    }
+
+
+    private async Task SearchAvaialableCars()
+    {
+
+        mycarList = new List<CarHireCarDto>();
+
+        dateCount = (returnDate - pickupDate).Days;
+
+        if (dateCount < 0)
+        {
+            toastService.ShowWarning("Return date can't be early than PickUp");
+        }
+        else
+        {
+            if (dateCount == 0) dateCount = 1;
+
+            chosenPickupBranchName = pickupBranchList.Find(bb => bb.ItemId == chosenPickupBranchId).ItemName;
+            chosenReturnBranchName = returnBranchList.Find(bb => bb.ItemId == chosenReturnBranchId).ItemName;
+
+            await SearchAvaialableCarApi();
+        }
+    }
+
+
+    private async Task SearchAvaialableCarApi()
+    {
+
+        mycarList = await carHireCarDtoService.GetAllDataAsync($"/api/CarHire?pickupBranchId={chosenPickupBranchId}&pickupDate={pickupDate.ToString("yyyy-MM-dd")}&returnDate={returnDate.ToString("yyyy-MM-dd")}");
+
+        if (mycarList != null)
+        {
+            await LoadCarBrands();
+
+            mycarFilteredList = new List<CarHireCarDto>();
+            mycarFilteredList = mycarList;
+
+            carCostList = new List<int>();
+
+            minChosenCost = (int)Decimal.Round(mycarList.Min(ss => ss.Costperday));
+            maxChosenCost = (int)Decimal.Round(mycarList.Max(ss => ss.Costperday));
+
+            chosenCost = maxChosenCost;
+
+            StateHasChanged();
+        }
+        else
+        {
+            minChosenCost = 0;
+            maxChosenCost = 0;
+        }
+
+    }
+
+
+    private async Task  NavigateToBookcar(int carId)
+    {
+
+        var myCar = mycarList.Where(cc => cc.Id == carId).First();
+
+        string carDescription = string.Join(" - ", new string[] { myCar.CarBrandName, myCar.CarModelName, myCar.GearboxName });
+
+        CarHireBookDisplay carHireBookDisplay = new CarHireBookDisplay(carId, myCar.CarPhoto, carDescription, 
+                                                                       chosenPickupBranchId , chosenPickupBranchName, pickupDate,
+                                                                       chosenReturnBranchId, chosenReturnBranchName, returnDate,
+                                                                       (dateCount * myCar.Costperday));
+
+        await carHireBookDisplayService.SaveAsync($"/api/CarHire/SetCarHireBookDisplay", carHireBookDisplay);
+
+        navigationManager.NavigateTo($"carhirebook");
+    }
+
+}
+
+ 

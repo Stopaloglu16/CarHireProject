@@ -1,0 +1,191 @@
+﻿@*<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">WebSite</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+*@
+
+
+@using Domain.Entities.MenuAggregate
+@using WebSite.Services
+
+@inject IMenuService MenuService
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+    <a href="/home2" class="brand-link">
+        <img src="/img/carhire.jpeg" alt="AdminLTE Logo" class="brand-image img-bordered elevation-3">
+
+        <span class="brand-text font-weight-light">Carhire</span>
+    </a>
+
+    <div class="sidebar">
+
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column text-sm" data-widget="treeview" role="menu" data-accordion="false">
+
+                @if (menuList == null)
+                {
+                    <p>Loading...</p>
+                }
+                else
+                {
+
+                    @foreach (WebMenu myitem in menuList)
+                    {
+
+                        @if (myitem.MainName != LastMainName)
+                        {
+
+                            <li class="nav-item">
+                              
+                                <NavLink class="nav-link" @onclick="()=>GetIsClicked(myitem)">
+                                    <i class="nav-icon @myitem.IconName"></i>
+                                    <p>@myitem.MainName <i class="fas fa-angle-left right"></i></p>
+                                </NavLink>
+
+                                @{ LastMainName = @myitem.MainName; }
+
+                                @if (expandSubNav && myitem.MainName == clickedMenu)
+                                {
+                                    <ul class="nav nav-treeview" style="display:block">
+
+                                        @foreach (WebMenu mySubmenu in menuList)
+                                        {
+                                            @if (mySubmenu.MainName == myitem.MainName)
+                                            {
+                                                @if (mySubmenu.SubName != "")
+                                                {
+                                                    @if (LastSubName != mySubmenu.SubName)
+                                                    {
+                                                        LastSubName = @mySubmenu.SubName;
+
+                                                        <li class="nav-header"> <i class="fas fa-chevron-down"></i> @mySubmenu.SubName</li>
+                                                    }
+                                                }
+
+                                                <li class="nav-item">
+                                                    <a href="@mySubmenu.LinkUrl" class="nav-link">
+                                                        <i class="fas fa-angle-right nav-icon"></i>
+                                                        <p>@mySubmenu.LinkName </p>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+
+                                    </ul>
+                                }
+
+                            </li>
+                        }
+                    }
+                }
+
+            </ul>
+        </nav>
+
+    </div>
+
+</aside>
+
+
+@code { 
+
+    private bool collapseNavMenu = true;
+    private bool expandSubNav;
+    //private int clickedMenu = 0;
+    private string clickedMenu = "";
+    private bool hasPageName = true;
+    //private int prevClickedMenu = 0;
+    private string prevClickedMenu = "";
+
+    private string LastMainName = "";
+    private string LastSubName = "";
+
+    public IEnumerable<WebMenu> menuList;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        if (hasPageName)
+        {
+            collapseNavMenu = !collapseNavMenu;
+        }
+
+    }
+
+
+
+    public void GetIsClicked(WebMenu webMenu)
+    {
+
+        //expandSubNav = true;
+
+        //clickedMenu = webMenu.WebMenuID;
+        clickedMenu = webMenu.MainName;
+
+        if (prevClickedMenu != clickedMenu)
+        {
+            expandSubNav = false;
+
+            if (webMenu.LinkName == "")
+            {
+                hasPageName = true;
+            }
+            else
+            {
+                expandSubNav = !expandSubNav;
+                hasPageName = false;
+            }
+        }
+        else
+        {
+            expandSubNav = !expandSubNav;
+        }
+
+        prevClickedMenu = clickedMenu;
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        menuList = await MenuService.GetWebMenu();
+    }
+
+    }
