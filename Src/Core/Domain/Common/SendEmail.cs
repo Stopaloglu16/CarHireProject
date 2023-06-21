@@ -14,8 +14,6 @@ namespace Domain.Common
         {
             try
             {
-
-
                 System.Net.Mail.MailMessage myMailMessage = new System.Net.Mail.MailMessage();
                 myMailMessage.From = new MailAddress("No-Reply@business.co.uk");
                 myMailMessage.To.Add("testemail@hotmail.com");

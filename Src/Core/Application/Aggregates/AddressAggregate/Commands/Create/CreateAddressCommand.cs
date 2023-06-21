@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.AddressAggregate.Commands.Create
 {
-    public class CreateAddressCommand : IRequest<int>
+    public record CreateAddressCommand : IRequest<int>
     {
 
         public CreateAddressCommand(string _Address1, string _City, string _Postcode, AddressType _addressType)
