@@ -6,7 +6,7 @@ As a carhire.com  customer:
 When a customer book your car, enter into a contract with them: the company are agreeing to arrange and manage your booking when a customer pick your car up,
 enter into a contract with the rental company: they are agreeing to provide the car.
 
-[![Build status](https://dev.azure.com/stopaloglu16/CarHire/_apis/build/status/CarHire-ASP.NET%20Core-CI)](https://dev.azure.com/stopaloglu16/CarHire/_build/latest?definitionId=-1)
+[![Build status](https://dev.azure.com/stopaloglu16/CarHire/_apis/build/status/CarHire-ASP.NET%20Core-CI)](https://dev.azure.com/stopaloglu16/CarHire/_build/latest?definitionId=22)
 
 # Features
 
