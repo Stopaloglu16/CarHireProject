@@ -1,16 +1,16 @@
 ﻿@page "/branchdetails/{branchId:int}"
 @attribute [Authorize]
 
-@using Application.Aggregates.BranchAggregate.Commands.Create
-@using Application.Aggregates.BranchAggregate.Commands.Update
-@using Application.Aggregates.BranchAggregate.Queries
-@using Application.Aggregates.CarAggregate.Queries
-@using Domain.Common
-@using Domain.Enums
-@using WebSite.Services
-@using Application.Aggregates.BranchAggregate.Commands
-@using CarHireRazorClassLibrary
-@using WebSite.Pages.Branches.Component
+@    using Application.Aggregates.BranchAggregate.Commands.Create
+@    using Application.Aggregates.BranchAggregate.Commands.Update
+@    using Application.Aggregates.BranchAggregate.Queries
+@    using Application.Aggregates.CarAggregate.Queries
+@    using Domain.Common
+@    using Domain.Enums
+@    using WebSite.Services
+@    using Application.Aggregates.BranchAggregate.Commands
+@    using CarHireRazorClassLibrary
+@    using WebSite.Pages.Branches.Component
 
 @inject IWebApiService<BranchDto, BranchDto> branchDisplayService
 @inject IWebApiService<CreateBranchRequest, CreateBranchResponse> branchCreateService

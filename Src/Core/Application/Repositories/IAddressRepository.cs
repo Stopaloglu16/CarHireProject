@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities.AddressAggregate;
+using Domain.Entities;
 
 namespace Application.Repositories
 {

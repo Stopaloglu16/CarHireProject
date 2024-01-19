@@ -5,7 +5,6 @@ using Application.Repositories;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Common;
-using Domain.Entities.BranchAggregate;
 using Domain.Entities.CarAggregate;
 using Domain.Enums;
 using Infrastructure.Data;
@@ -64,7 +63,7 @@ namespace Infrastructure.Repositories.CarRepos
         }
 
 
-     
+
 
         public async Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
         {
@@ -153,11 +152,11 @@ namespace Infrastructure.Repositories.CarRepos
 
                 return new UpdateCarResponse(-1, new BasicErrorHandler());
             }
-       
+
         }
 
-      
 
-      
+
+
     }
 }

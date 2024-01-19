@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
-
-namespace Application.Aggregates.CarHireAggregate.Queries
+﻿namespace Application.Aggregates.CarHireAggregate.Queries
 {
     public class CarHireBookDisplay
     {
@@ -28,7 +21,7 @@ namespace Application.Aggregates.CarHireAggregate.Queries
         public string CarPhoto { get; set; }
         public string CarDescription { get; set; }
 
-        public int PickLocationId { get; set; } 
+        public int PickLocationId { get; set; }
         public string PickLocation { get; set; }
         public DateTime PickDatetime { get; set; }
 

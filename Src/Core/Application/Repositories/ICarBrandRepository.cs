@@ -1,7 +1,7 @@
 ﻿using Application.Aggregates.CarBrandAggregate.Queries;
 using Application.Common.Interfaces;
-using Domain.Common;
-using Domain.Entities.CarBrandsAggregate;
+using Domain.Entities;
+using Domain.Utilities;
 
 namespace Application.Repositories
 {

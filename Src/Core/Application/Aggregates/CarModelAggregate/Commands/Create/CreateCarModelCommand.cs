@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities.CarModelAggregate;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 

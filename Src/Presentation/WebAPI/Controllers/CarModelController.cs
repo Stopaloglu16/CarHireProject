@@ -1,11 +1,9 @@
-﻿using Application.Aggregates.BranchAggregate.Commands.Create;
-using Application.Aggregates.BranchAggregate.Commands.Update;
-using Application.Aggregates.BranchAggregate.Queries;
-using Application.Aggregates.CarModelAggregate.Commands.Create;
+﻿using Application.Aggregates.CarModelAggregate.Commands.Create;
 using Application.Aggregates.CarModelAggregate.Commands.Update;
 using Application.Aggregates.CarModelAggregate.Queries;
 using CarHire.Services.CarModelService;
 using Domain.Common;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers

@@ -3,6 +3,7 @@ using Domain.Common;
 using Domain.Entities.RoleAggregate;
 using Domain.Entities.UserAggregate;
 using Domain.Entities.UserAuthAggregate.Login;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -66,7 +67,7 @@ namespace WebAPI.Controllers.UserAuth
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
 
-                user.Password = UtilityClass.Decrypt(user.Password, true, _appSettings.KeyEncrypte);
+                user.Password = EncryptDecrypt.Decrypt(user.Password, true, _appSettings.KeyEncrypte);
 
                 myResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, lockoutOnFailure: false);
 

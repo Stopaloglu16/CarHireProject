@@ -1,10 +1,10 @@
 ﻿using Application.Aggregates.CarAggregate.Queries;
 using Application.Common.Interfaces;
-using Domain.Entities.CarHireAggregate;
+using Domain.Entities;
 
 namespace Application.Repositories
 {
-    public interface ICarHireRepository : IRepository<CarHireObj>
+    public interface ICarHireRepository : IRepository<CarHireLog>
     {
         //Task<IEnumerable<CarHireDto>> GetCarHires();
 

@@ -31,9 +31,9 @@ namespace Infrastructure.Data
             _currentUserService = currentUserService;
         }
 
-        public ApplicationDbContext()
-        {
-        }
+        //public ApplicationDbContext()
+        //{
+        //}
 #nullable enable
 
         public DbSet<Address> Addresses { get; set; }

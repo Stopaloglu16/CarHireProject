@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories.WebMenuRepos
                 LinkUrl = ss.LinkUrl,
                 MenuOrder = ss.MenuOrder,
                 IconName = ss.IconName,
-                RoleId  =  ss.RoleId 
+                RoleId = ss.RoleId
             }).ToListAsync();
         }
     }

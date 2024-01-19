@@ -1,14 +1,14 @@
 ﻿@page "/cardetails/{CarId:int}"
 @attribute [Authorize]
 
-@using Application.Aggregates.CarAggregate.Commands.Create
-@using Application.Aggregates.CarAggregate.Commands.Update
-@using Application.Aggregates.CarAggregate.Queries
-@using Domain.Common
-@using Domain.Enums
-@using WebSite.Services
-@using Application.Aggregates.CarAggregate.Commands
-@using CarHireRazorClassLibrary
+@    using Application.Aggregates.CarAggregate.Commands.Create
+@    using Application.Aggregates.CarAggregate.Commands.Update
+@    using Application.Aggregates.CarAggregate.Queries
+@    using Domain.Common
+@    using Domain.Enums
+@    using WebSite.Services
+@    using Application.Aggregates.CarAggregate.Commands
+@    using CarHireRazorClassLibrary
 
 @inject IWebApiService<CarDto, CarDto> CarDisplayService
 @inject IWebApiService<CreateCarRequest, CreateCarResponse> carCreateService

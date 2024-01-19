@@ -1,6 +1,5 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Domain.Entities.CarModelAggregate;
 using MediatR;
 
 namespace Application.Aggregates.CarModelAggregate.Commands.Update

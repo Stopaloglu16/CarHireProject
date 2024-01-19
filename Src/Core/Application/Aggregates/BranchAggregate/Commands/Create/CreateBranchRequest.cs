@@ -1,5 +1,5 @@
 ﻿using Application.Aggregates.AddressAggregate.Queries;
-using Domain.Common;
+using Domain.Utilities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.BranchAggregate.Commands.Create

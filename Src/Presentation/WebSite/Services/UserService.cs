@@ -1,6 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Entities.UserAuthAggregate.Login;
 using Domain.Entities.UserAuthAggregate.Register;
+using Domain.Utilities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -27,7 +28,7 @@ namespace WebSite.Services
 
             //myuser.Password = await UtilityClass.EncryptAsyc(myuser.Password, true, _appSettings.KeyEncrypte);
 
-            myuser.Password = await UtilityClass.EncryptAsyc(myuser.Password, true, _appSettings.KeyEncrypte);
+            myuser.Password = await EncryptDecrypt.EncryptAsyc(myuser.Password, true, _appSettings.KeyEncrypte);
 
             string serializedUser = JsonConvert.SerializeObject(myuser);
 
@@ -76,7 +77,7 @@ namespace WebSite.Services
         {
             // PnErrorHandler myappResponse = new PnErrorHandler();
 
-            myuser.Password = await UtilityClass.EncryptAsyc(myuser.Password, true, _appSettings.KeyEncrypte);
+            myuser.Password = await EncryptDecrypt.EncryptAsyc(myuser.Password, true, _appSettings.KeyEncrypte);
 
             string serializedUser = JsonConvert.SerializeObject(myuser);
 

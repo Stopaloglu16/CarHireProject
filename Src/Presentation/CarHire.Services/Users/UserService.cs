@@ -5,7 +5,6 @@ using Domain.Common;
 using Domain.Entities.UserAggregate;
 using Domain.Entities.UserAuthAggregate.Login;
 using Domain.Enums;
-using System.Text;
 
 namespace CarHire.Services.Users
 {
@@ -73,7 +72,7 @@ namespace CarHire.Services.Users
             if (myReturn == null) return new CreateUserResponse(0, new BasicErrorHandler("System Issue"));
 
 
-         
+
 
             return new CreateUserResponse(myReturn.Id, new BasicErrorHandler());
         }

@@ -2,7 +2,7 @@
 using Application.Aggregates.CarExtraAggregate.Commands.Update;
 using Application.Aggregates.CarExtraAggregate.Queries;
 using Application.Common.Interfaces;
-using Domain.Entities.CarExtraAggregate;
+using Domain.Entities;
 
 namespace Application.Repositories
 {

@@ -3,12 +3,11 @@ using Application.Aggregates.CarModelAggregate.Commands.Update;
 using Application.Aggregates.CarModelAggregate.Queries;
 using Application.Repositories;
 using Domain.Common;
-using Domain.Entities.CarBrandsAggregate;
 using Domain.Entities.CarModelAggregate;
+using Domain.Utilities;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace Infrastructure.Repositories.CarModelRepos
 {
@@ -119,7 +118,7 @@ namespace Infrastructure.Repositories.CarModelRepos
             }
         }
 
-     
+
     }
 
 }

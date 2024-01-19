@@ -10,6 +10,7 @@ namespace Application.Common.Interfaces
         Task<List<TEntity>> ListAllAsync();
         Task<TEntity> GetByIdAsync(int id);
         Task<TEntity> AddAsync(TEntity entity);
+        Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entity);
         Task<TEntity> UpdateAsync(TEntity entity);
         Task<TEntity> DeleteAsync(int id);
 

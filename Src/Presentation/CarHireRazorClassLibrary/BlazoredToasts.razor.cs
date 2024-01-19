@@ -1,7 +1,6 @@
 ﻿using CarHireRazorClassLibrary.Config;
-using Microsoft.AspNetCore.Components;
 using CarHireRazorClassLibrary.Services;
-using System.Timers;
+using Microsoft.AspNetCore.Components;
 
 namespace CarHireRazorClassLibrary
 {

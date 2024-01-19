@@ -1,11 +1,11 @@
-using WebSite.Services;
-using WebSite.Data;
-using Domain.Common;
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
 using CarHireRazorClassLibrary.Services;
-using WebSite.Handlers;
+using Domain.Common;
+using Microsoft.AspNetCore.Components.Authorization;
 using WebSite;
+using WebSite.Data;
+using WebSite.Handlers;
+using WebSite.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

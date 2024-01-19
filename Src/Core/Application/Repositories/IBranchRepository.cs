@@ -2,8 +2,8 @@
 using Application.Aggregates.BranchAggregate.Commands.Update;
 using Application.Aggregates.BranchAggregate.Queries;
 using Application.Common.Interfaces;
-using Domain.Common;
-using Domain.Entities.BranchAggregate;
+using Domain.Entities;
+using Domain.Utilities;
 
 namespace Application.Repositories
 {

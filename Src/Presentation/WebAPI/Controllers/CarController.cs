@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
         [HttpGet("GetByBrandModel/{brandId}/{modelId}")]
         public async Task<IEnumerable<CarDto>> GetByBrandModel(int brandId, int modelId)
         {
-            if(modelId == 0)
+            if (modelId == 0)
             {
                 return await _carService.GetCarsByBrandId(brandId);
             }

@@ -1,9 +1,8 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Enums;
+
+public enum UserType
 {
-    public enum UserType
-    {
-        AdminUser = 0,
-        BranchUser = 1,
-        Customer = 2
-    }
+    AdminUser = 0,
+    BranchUser = 1,
+    Customer = 2
 }

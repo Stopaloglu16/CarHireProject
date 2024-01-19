@@ -1,5 +1,4 @@
-﻿using Application.Aggregates.UserAggregate.Commands;
-using Application.Aggregates.UserAggregate.Queries;
+﻿using Application.Aggregates.UserAggregate.Queries;
 using Application.Common.Interfaces;
 using Domain.Entities.UserAggregate;
 
@@ -15,7 +14,7 @@ namespace Application.Repositories
 
         Task<UserDto> GetUserWithRolesById(int Id);
 
-    
+
 
     }
 

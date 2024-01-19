@@ -1,7 +1,6 @@
 ﻿using Application.Aggregates.WebAggregate.Queries;
 using Application.Common.Interfaces;
 using CarHire.Services.WebMenus;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers

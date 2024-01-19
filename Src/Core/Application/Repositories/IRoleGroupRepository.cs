@@ -1,6 +1,6 @@
 ﻿using Application.Aggregates.RoleAggregate.Queries;
 using Application.Common.Interfaces;
-using Domain.Entities.RoleAggregate;
+using Domain.Entities.UserAggregate;
 
 namespace Application.Repositories
 {

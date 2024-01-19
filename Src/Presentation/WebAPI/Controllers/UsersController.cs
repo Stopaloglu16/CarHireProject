@@ -1,20 +1,16 @@
-﻿using Application.Aggregates.BranchAggregate.Commands.Create;
-using Application.Aggregates.BranchAggregate.Commands.Update;
-using Application.Aggregates.BranchAggregate.Queries;
-using Application.Aggregates.UserAggregate.Commands;
+﻿using Application.Aggregates.UserAggregate.Commands;
 using Application.Aggregates.UserAggregate.Queries;
-using CarHire.Services.Branchs;
 using CarHire.Services.Users;
 using Domain.Common;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 
 namespace WebAPI.Controllers
 {
-    
+
     public class UsersController : ApiController
     {
 
@@ -49,8 +45,8 @@ namespace WebAPI.Controllers
         }
 
 
-        
-        
+
+
         [HttpPost]
         [Authorize(Roles = "usermanage")]
         [Route("CreateAdmin")]
@@ -66,7 +62,7 @@ namespace WebAPI.Controllers
             }
         }
 
-        
+
         [HttpPost]
         [Authorize(Roles = "usermanage")]
         [Route("CreateBranchUser")]
@@ -76,7 +72,7 @@ namespace WebAPI.Controllers
             {
                 var myReturn = await _userService.AddBranchUser(user);
 
-                var code = await UtilityClass.EncryptAsyc(user.UserName, true, _appSettings.KeyEncrypte);
+                var code = await EncryptDecrypt.EncryptAsyc(user.UserName, true, _appSettings.KeyEncrypte);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
                 if (myReturn.Id > 0) { SendEmail.SendRegister(user.UserEmail, user.UserName, code.ToString()); }

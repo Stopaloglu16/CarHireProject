@@ -1,6 +1,6 @@
 ﻿using Application.Aggregates.WebAggregate.Queries;
 using Application.Common.Interfaces;
-using Domain.Entities.MenuAggregate;
+using Domain.Entities;
 
 namespace Application.Repositories
 {

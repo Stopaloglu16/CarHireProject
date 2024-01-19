@@ -1,0 +1,34 @@
+##Naming
+
+MethodName_StateUnderTest_ExpectedBehavior 
+
+There are arguments against this strategy that if method names change as part of code refactoring than 
+test name like this should also change or it becomes difficult to comprehend at a later stage. 
+
+Following are some of the example:
+isAdult_AgeLessThan18_False
+withdrawMoney_InvalidAccount_ExceptionThrown
+admitStudent_MissingMandatoryFields_FailToAdmitf
+
+
+##Function Design
+1. Arrange inputs and targets. 
+Arrange steps should set up the test case. Does the test require any objects or special settings? 
+Does it need to prep a database? 
+Does it need to log into a web app? Handle all of these operations at the start of the test.
+
+2. Act on the target behavior. Act steps should cover the main thing to be tested. 
+This could be calling a function or method, calling a REST API, or interacting with a web page. Keep actions focused on the target behavior.
+
+3. Assert expected outcomes. Act steps should elicit some sort of response. Assert steps verify the goodness or badness of that response. 
+Sometimes, assertions are as simple as checking numeric or string values. Other times, they may require checking multiple facets of a system. 
+Assertions will ultimately determine if the test passes or fails.
+
+ # Arrange
+  negative = -5
+   
+  # Act
+  answer = abs(negative)
+   
+  # Assert
+  assert answer == 5

@@ -39,7 +39,7 @@ namespace Application.Aggregates.UserAggregate.Queries
         public void Mapping(Profile profile)
         {
             var c = profile.CreateMap<User, UserDto>()
-                        .ForMember(d => d.RoleUsers , opt => opt.Ignore());
+                        .ForMember(d => d.RoleUsers, opt => opt.Ignore());
         }
 
     }

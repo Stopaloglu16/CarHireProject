@@ -5,6 +5,7 @@ using Application.Repositories;
 using Domain.Common;
 using Domain.Entities.AddressAggregate;
 using Domain.Entities.BranchAggregate;
+using Domain.Utilities;
 
 namespace CarHire.Services.Branchs
 {

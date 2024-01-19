@@ -1,5 +1,4 @@
 ﻿using Domain.Common;
-using Domain.Entities.RoleAggregate;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserAuthAggregate.Login

@@ -1,6 +1,6 @@
 ﻿namespace Domain.Common
 {
-    public abstract class AuditableEntity
+    public abstract class AuditableEntity<T> : BaseEntity<T>
     {
         public DateTime Created { get; set; }
 

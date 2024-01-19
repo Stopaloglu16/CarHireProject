@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CarHireCarDto>>> Get([FromQuery]GetAvailableCarsQuery command)
+        public async Task<ActionResult<IEnumerable<CarHireCarDto>>> Get([FromQuery] GetAvailableCarsQuery command)
         {
             return Ok(await Mediator.Send(command));
         }
@@ -96,7 +96,7 @@ namespace WebAPI.Controllers
 
             var identity = (ClaimsIdentity)User.Identity;
 
-            
+
 
             var userId = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 

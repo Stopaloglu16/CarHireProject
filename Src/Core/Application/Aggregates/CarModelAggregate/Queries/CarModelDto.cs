@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Mappings;
-using Domain.Entities.CarModelAggregate;
 
 namespace Application.Aggregates.CarModelAggregate.Queries
 {

@@ -1,6 +1,6 @@
 ﻿using Application.Aggregates.CarBrandAggregate.Commands.Create;
 using Application.Aggregates.CarBrandAggregate.Queries;
-using Domain.Common;
+using Domain.Utilities;
 
 namespace CarHire.Services.CarBrands
 {

@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Mappings;
-using Domain.Entities.RoleAggregate;
 
 namespace Application.Aggregates.RoleAggregate.Queries
 {

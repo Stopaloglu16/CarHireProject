@@ -1,8 +1,7 @@
-﻿namespace Domain.Common
+﻿namespace Domain.Common;
+
+public class AppSettings
 {
-    public class AppSettings
-    {
-        public string ApiAddressForDatabase { get; set; }
-        public string KeyEncrypte { get; set; }
-    }
+    //public string ApiAddressForDatabase { get; set; }
+    //public string KeyEncrypte { get; set; }
 }

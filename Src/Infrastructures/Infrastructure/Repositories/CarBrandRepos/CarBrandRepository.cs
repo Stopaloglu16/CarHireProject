@@ -1,7 +1,7 @@
 ﻿using Application.Aggregates.CarBrandAggregate.Queries;
 using Application.Repositories;
-using Domain.Common;
 using Domain.Entities.CarBrandsAggregate;
+using Domain.Utilities;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;

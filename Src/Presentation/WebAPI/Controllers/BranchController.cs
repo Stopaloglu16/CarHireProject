@@ -3,9 +3,9 @@ using Application.Aggregates.BranchAggregate.Commands.Update;
 using Application.Aggregates.BranchAggregate.Queries;
 using CarHire.Services.Branchs;
 using Domain.Common;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -23,7 +23,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<BranchDto>> Get(bool IsActive)
         {
-            
+
 
             return await _branchService.GetBranches();
         }
@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (Id != branch.Id) return BadRequest( new UpdateBranchResponse(0, new BasicErrorHandler( "Id not match")));
+                if (Id != branch.Id) return BadRequest(new UpdateBranchResponse(0, new BasicErrorHandler("Id not match")));
 
                 return await _branchService.UpdateBranch(branch);
             }

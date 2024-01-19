@@ -79,6 +79,13 @@ namespace Infrastructure.Data.EfCore
             return entity;
         }
 
+        public async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entity)
+        {
+            context.Set<TEntity>().AddRange(entity);
+            await context.SaveChangesAsync(new CancellationToken());
+            return entity;
+        }
+
         public async Task<TEntity> DeleteAsync(int id)
         {
             var entity = await context.Set<TEntity>().FindAsync(id);

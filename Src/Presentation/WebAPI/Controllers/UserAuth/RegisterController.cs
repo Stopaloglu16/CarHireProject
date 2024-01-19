@@ -1,7 +1,7 @@
 ﻿using CarHire.Services.UserAuths;
 using Domain.Common;
-using Domain.Entities.UserAggregate;
 using Domain.Entities.UserAuthAggregate.Register;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -52,10 +52,10 @@ namespace WebAPI.Controllers.UserAuth
                 }
                 else
                 {
-                    
+
                     var myIduser = new IdentityUser { UserName = myUser.UserName, Email = myUser.UserEmail };
 
-                    userRegister.Password = UtilityClass.Decrypt(userRegister.Password, true, _appSettings.KeyEncrypte);
+                    userRegister.Password = EncryptDecrypt.Decrypt(userRegister.Password, true, _appSettings.KeyEncrypte);
                     myIduser.EmailConfirmed = true;
 
                     var result = await _userManager.CreateAsync(myIduser, userRegister.Password);
@@ -87,7 +87,7 @@ namespace WebAPI.Controllers.UserAuth
             return userRegisterResponse;
         }
 
-        
+
         //public async Task<UserRegisterResponse> RegisterUser1(int _userId, string _UserName, string _UserEmail, string _UserPassword)
         //{
         //    var myIduser = new IdentityUser { UserName = _UserName, Email = _UserEmail };

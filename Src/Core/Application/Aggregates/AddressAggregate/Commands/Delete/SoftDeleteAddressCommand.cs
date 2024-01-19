@@ -1,6 +1,5 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Domain.Entities.AddressAggregate;
 using MediatR;
 
 namespace Application.Aggregates.AddressAggregate.Commands.Delete

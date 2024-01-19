@@ -1,16 +1,14 @@
 ﻿using Application.Common.Interfaces;
 using Application.Repositories;
-using Domain.Common;
-using Domain.Entities.CarExtraAggregate;
-using Domain.Entities.CarHireAggregate;
+using Domain.Utilities;
 using MediatR;
 
 namespace Application.Aggregates.CarHireAggregate.Commands.Create
 {
     public class CreateCarHireCommand : IRequest<int>
     {
-        public CreateCarHireCommand(int carId, int userId, int pickUpBranchId, DateTime pickUpDate, DateTime pickUpDateTime, 
-                                    int returnBranchId, DateTime returnDate, DateTime returnDateTime, int returnMileage, 
+        public CreateCarHireCommand(int carId, int userId, int pickUpBranchId, DateTime pickUpDate, DateTime pickUpDateTime,
+                                    int returnBranchId, DateTime returnDate, DateTime returnDateTime, int returnMileage,
                                     decimal bookingCost, ChosenItemList carExtras = null)
         {
             CarId = carId;
@@ -64,7 +62,7 @@ namespace Application.Aggregates.CarHireAggregate.Commands.Create
                 {
 
                     var entity = new CarHireObj();
-                    
+
                     entity.CarId = request.CarId;
                     entity.UserId = request.UserId;
                     entity.BookingCost = request.BookingCost;

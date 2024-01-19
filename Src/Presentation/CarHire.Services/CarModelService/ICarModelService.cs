@@ -1,7 +1,7 @@
 ﻿using Application.Aggregates.CarModelAggregate.Commands.Create;
 using Application.Aggregates.CarModelAggregate.Commands.Update;
 using Application.Aggregates.CarModelAggregate.Queries;
-using Domain.Common;
+using Domain.Utilities;
 
 namespace CarHire.Services.CarModelService
 {

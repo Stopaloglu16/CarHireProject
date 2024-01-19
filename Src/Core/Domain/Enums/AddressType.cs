@@ -1,8 +1,7 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Enums;
+
+public enum AddressType
 {
-    public enum AddressType
-    {
-        BranchAddress = 1,
-        CustomerAddress = 2
-    }
+    BranchAddress = 1,
+    CustomerAddress = 2
 }

@@ -5,6 +5,7 @@ using Application.Aggregates.BranchAggregate.Queries;
 using Application.Repositories;
 using Domain.Common;
 using Domain.Entities.BranchAggregate;
+using Domain.Utilities;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
@@ -124,7 +125,7 @@ namespace Infrastructure.Repositories.BranchRepos
 
                 myBranchOrj.BranchName = updateBranchRequest.BranchName;
 
-               // var myTemp = myBranchOrj.Cars.ToList();
+                // var myTemp = myBranchOrj.Cars.ToList();
 
 
                 foreach (var myCar in updateBranchRequest.carChosenValues)
@@ -147,7 +148,7 @@ namespace Infrastructure.Repositories.BranchRepos
 
                 foreach (var item in myBranchOrj.Cars.ToList())
                 {
-                    if(!updateBranchRequest.carChosenValues.Any(s => s.ChosenId == item.Id ))
+                    if (!updateBranchRequest.carChosenValues.Any(s => s.ChosenId == item.Id))
                     {
                         myBranchOrj.Cars.Remove(_dbContext.Cars.Find(item.Id));
                     }
@@ -160,7 +161,7 @@ namespace Infrastructure.Repositories.BranchRepos
                 var myRtn = await UpdateAsync(myBranchOrj);
 
                 return new UpdateBranchResponse(updateBranchRequest.Id, null);
-                
+
             }
             catch (Exception ex)
             {

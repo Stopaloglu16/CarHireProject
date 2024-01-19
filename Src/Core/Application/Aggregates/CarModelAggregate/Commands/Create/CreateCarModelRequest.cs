@@ -15,6 +15,7 @@ namespace Application.Aggregates.CarModelAggregate.Commands.Create
         }
 
         [Required]
+        [StringLength(50)]
         public string Name { get; }
 
         public string? CarPhoto { get; set; }

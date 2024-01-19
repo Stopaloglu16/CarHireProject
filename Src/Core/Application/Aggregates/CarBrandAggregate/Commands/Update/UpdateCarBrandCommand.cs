@@ -1,6 +1,5 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Domain.Entities.CarBrandsAggregate;
 using MediatR;
 
 namespace Application.Aggregates.CarBrandAggregate.Commands.Update

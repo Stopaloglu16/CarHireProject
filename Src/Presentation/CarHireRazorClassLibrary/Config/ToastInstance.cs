@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CarHireRazorClassLibrary.Config
+﻿namespace CarHireRazorClassLibrary.Config
 {
     public class ToastInstance
     {

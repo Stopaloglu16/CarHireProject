@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.Common.Mappings;
-using Domain.Entities.CarAggregate;
 using Domain.Enums;
 
 namespace Application.Aggregates.CarAggregate.Queries

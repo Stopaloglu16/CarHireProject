@@ -1,9 +1,8 @@
-﻿namespace Domain.Enums
-{
-    public enum Gearbox
-    {
-        Manual = 0,
-        Automatic = 1
+﻿namespace Domain.Enums;
 
-    }
+public enum Gearbox
+{
+    Manual = 0,
+    Automatic = 1
+
 }

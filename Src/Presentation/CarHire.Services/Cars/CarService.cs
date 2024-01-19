@@ -2,9 +2,6 @@
 using Application.Aggregates.CarAggregate.Commands.Update;
 using Application.Aggregates.CarAggregate.Queries;
 using Application.Repositories;
-using Domain.Common;
-using Domain.Entities.BranchAggregate;
-using Domain.Entities.CarAggregate;
 
 namespace CarHire.Services.Cars
 {
@@ -30,7 +27,7 @@ namespace CarHire.Services.Cars
             return await _carRepository.GetCars();
         }
 
-      
+
         public async Task<CreateCarResponse> Add(CreateCarRequest car)
         {
             return await _carRepository.CreateCar(car);

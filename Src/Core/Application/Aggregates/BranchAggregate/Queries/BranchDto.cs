@@ -1,10 +1,7 @@
 ﻿using Application.Aggregates.AddressAggregate.Queries;
-using Application.Aggregates.CarAggregate.Queries;
 using AutoMapper;
-using Domain.Common;
 using Domain.Common.Mappings;
-using Domain.Entities.BranchAggregate;
-using Domain.Entities.CarAggregate;
+using Domain.Utilities;
 
 namespace Application.Aggregates.BranchAggregate.Queries
 {

@@ -1,7 +1,7 @@
 ﻿using Application.Aggregates.BranchAggregate.Commands.Create;
 using Application.Aggregates.BranchAggregate.Commands.Update;
 using Application.Aggregates.BranchAggregate.Queries;
-using Domain.Common;
+using Domain.Utilities;
 
 namespace CarHire.Services.Branchs
 {

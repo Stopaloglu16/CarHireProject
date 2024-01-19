@@ -1,14 +1,11 @@
 ﻿using Application.Aggregates.RoleAggregate.Queries;
-using Application.Aggregates.UserAggregate.Commands;
 using Application.Aggregates.UserAggregate.Queries;
 using Application.Repositories;
-using Domain.Common;
 using Domain.Entities.UserAggregate;
 using Domain.Enums;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace Infrastructure.Repositories.UserRepos
 {
