@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Aggregates.CarBrandAggregate.Commands.Create
+namespace Application.Aggregates.CarBrandAggregate.Commands.Create;
+
+
+public record CreateCarBrandRequest
 {
 
-    public class CreateCarBrandRequest
-    {
-
-        [Required]
-        [StringLength(50)]
-        public string? BrandName { get; set; }
-
-    }
+    [Required]
+    [StringLength(50)]
+    public string? BrandName { get; set; }
 
 }

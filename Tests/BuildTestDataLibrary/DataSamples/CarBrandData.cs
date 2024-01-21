@@ -1,5 +1,5 @@
 ﻿using Application.Aggregates.CarBrandAggregate.Commands.Create;
-using Domain.Entities.CarBrandsAggregate;
+using Domain.Entities;
 using System.Collections;
 
 namespace BuildTestDataLibrary.DataSamples

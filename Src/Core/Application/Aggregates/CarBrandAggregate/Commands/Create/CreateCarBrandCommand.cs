@@ -1,39 +1,39 @@
 ﻿using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 
-namespace Application.Aggregates.CarBrandAggregate.Commands.Create
+namespace Application.Aggregates.CarBrandAggregate.Commands.Create;
+
+
+public record CreateCarBrandCommand : IRequest<int>
 {
-    public class CreateCarBrandCommand : IRequest<int>
+    public CreateCarBrandCommand(string name)
     {
-        public CreateCarBrandCommand(string name)
-        {
-            Name = name;
-        }
-
-        public string Name { get; set; }
+        Name = name;
     }
 
+    public required string Name { get; set; }
+}
 
-    public class CreateCarBrandCommandHandler : IRequestHandler<CreateCarBrandCommand, int>
+
+public class CreateCarBrandCommandHandler : IRequestHandler<CreateCarBrandCommand, int>
+{
+    private readonly IApplicationDbContext _context;
+
+    public CreateCarBrandCommandHandler(IApplicationDbContext context)
     {
-        private readonly IApplicationDbContext _context;
+        _context = context;
+    }
 
-        public CreateCarBrandCommandHandler(IApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public async Task<int> Handle(CreateCarBrandCommand request, CancellationToken cancellationToken)
+    {
+        var entity = new CarBrand();
 
-        public async Task<int> Handle(CreateCarBrandCommand request, CancellationToken cancellationToken)
-        {
-            var entity = new CarBrand();
+        entity.Name = request.Name;
 
-            entity.Name = request.Name;
+        _context.CarBrands.Add(entity);
 
-            _context.CarBrands.Add(entity);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return entity.Id;
-        }
+        return entity.Id;
     }
 }

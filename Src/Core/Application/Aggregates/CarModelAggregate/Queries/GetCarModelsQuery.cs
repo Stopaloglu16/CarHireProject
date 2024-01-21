@@ -1,8 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Aggregates.CarModelAggregate.Queries
 {

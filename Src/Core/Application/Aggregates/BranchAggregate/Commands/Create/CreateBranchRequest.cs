@@ -2,20 +2,16 @@
 using Domain.Utilities;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Aggregates.BranchAggregate.Commands.Create
+namespace Application.Aggregates.BranchAggregate.Commands.Create;
+
+public class CreateBranchRequest
 {
-    public class CreateBranchRequest
-    {
 
-        [Required]
-        [StringLength(50)]
-        public string? BranchName { get; set; }
+    [StringLength(50)]
+    public required string BranchName { get; set; }
 
-        public AddressDto? Address { get; set; }
+    public AddressDto? Address { get; set; }
 
-        public List<ChosenItem> carChosenValues { get; set; }
-
-    }
-
+    public List<ChosenItem> carChosenValues { get; set; }
 
 }

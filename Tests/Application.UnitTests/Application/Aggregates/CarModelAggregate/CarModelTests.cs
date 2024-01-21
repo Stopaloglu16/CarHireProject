@@ -1,5 +1,4 @@
 ﻿using Application.Aggregates.CarModelAggregate.Commands.Create;
-using Domain.Entities.CarModelAggregate;
 
 namespace Application.UnitTests.Application.Aggregates.CarrierAggregate
 {
@@ -37,7 +36,14 @@ namespace Application.UnitTests.Application.Aggregates.CarrierAggregate
         [InlineData("newCarModel", "newCarPhoto", 100, 5, 1)]
         public void Create_WithAllParameters_Success(string name, string carPhoto, int carPhotoLenght, int seatNumber, int carBrandId)
         {
-            var _createCarModelRequest = new CreateCarModelRequest(name, carPhoto, carPhotoLenght, seatNumber, carBrandId);
+            var _createCarModelRequest = new CreateCarModelRequest()
+            {
+                Name = name,
+                CarPhoto = carPhoto,
+                CarPhotoLenght = carPhotoLenght,
+                SeatNumber = seatNumber,
+                CarBrandId = carBrandId
+            };
 
             Assert.Equal(name, _createCarModelRequest.Name);
         }

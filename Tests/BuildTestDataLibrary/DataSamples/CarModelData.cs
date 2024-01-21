@@ -1,13 +1,12 @@
 ﻿using Application.Aggregates.CarModelAggregate.Commands.Create;
-using Domain.Entities.CarModelAggregate;
+using Domain.Entities;
 using System.Collections;
 
-namespace BuildTestDataLibrary.DataSamples
+namespace BuildTestDataLibrary.DataSamples;
 {
     public class CarModelListGenerator
     {
-        public static IEnumerable<CarModel> Creates =>
-        new List<CarModel>
+        public static IEnumerable<CarModel> Creates => new List<CarModel>
         {
             new() { Name = "CHR", CarPhoto = "", CarPhotoLenght = 1, SeatNumber = 5, CarBrandId = 1 },
             new() { Name = "Aygo", CarPhoto = "", CarPhotoLenght = 1, SeatNumber = 5, CarBrandId = 1 },
@@ -37,7 +36,7 @@ namespace BuildTestDataLibrary.DataSamples
         public IEnumerator<object[]> GetEnumerator()
         {
             foreach (CarModel data in CarModelListGenerator.Creates)
-                yield return new object[] { new CreateCarModelRequest(data.Name, data.CarPhoto, (int)data.CarPhotoLenght, data.SeatNumber, data.CarBrandId) };
+                yield return new object[] { new CreateCarModelRequest() { Name = data.Name, CarPhoto = data.CarPhoto, CarPhotoLenght = (int)data.CarPhotoLenght, SeatNumber = data.SeatNumber, CarBrandId = data.CarBrandId } };
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }

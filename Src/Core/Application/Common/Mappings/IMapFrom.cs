@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-
-namespace Domain.Common.Mappings
+﻿namespace Domain.Common.Mappings
 {
     public interface IMapFrom<T>
     {

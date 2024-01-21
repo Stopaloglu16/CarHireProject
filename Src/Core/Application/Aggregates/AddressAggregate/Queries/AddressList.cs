@@ -1,9 +1,8 @@
-﻿namespace Application.Aggregates.AddressAggregate.Queries
+﻿namespace Application.Aggregates.AddressAggregate.Queries;
+
+public class AddressList
 {
-    public class AddressList
-    {
 
-        public List<AddressDto> addressDtos { get; set; }
+    public List<AddressDto> addressDtos { get; set; }
 
-    }
 }

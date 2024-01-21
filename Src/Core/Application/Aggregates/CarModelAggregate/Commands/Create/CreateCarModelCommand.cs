@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.CarModelAggregate.Commands.Create

@@ -1,41 +1,38 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 
-namespace Application.Aggregates.CarBrandAggregate.Commands.Update
+namespace Application.Aggregates.CarBrandAggregate.Commands.Update;
+
+public record UpdateCarBrandCommand : IRequest
 {
+    public int Id { get; set; }
+    public string? Name { get; set; }
+}
 
-    public class UpdateCarBrandCommand : IRequest
+
+public class UpdateCarBrandCommandHandler : IRequestHandler<UpdateCarBrandCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public UpdateCarBrandCommandHandler(IApplicationDbContext context)
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+        _context = context;
     }
 
-
-    public class UpdateCarBrandCommandHandler : IRequestHandler<UpdateCarBrandCommand>
+    public async Task<Unit> Handle(UpdateCarBrandCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
+        var entity = await _context.CarBrands.FindAsync(request.Id);
 
-        public UpdateCarBrandCommandHandler(IApplicationDbContext context)
+        if (entity == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(CarBrand), request.Id);
         }
 
-        public async Task<Unit> Handle(UpdateCarBrandCommand request, CancellationToken cancellationToken)
-        {
-            var entity = await _context.CarBrands.FindAsync(request.Id);
+        entity.Name = request.Name;
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(CarBrand), request.Id);
-            }
+        await _context.SaveChangesAsync(cancellationToken);
 
-            entity.Name = request.Name;
-
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

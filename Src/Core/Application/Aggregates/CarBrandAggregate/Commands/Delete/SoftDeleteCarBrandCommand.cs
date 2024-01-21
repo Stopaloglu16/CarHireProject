@@ -1,38 +1,37 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 
-namespace Application.Aggregates.CarBrandAggregate.Commands.Delete
+namespace Application.Aggregates.CarBrandAggregate.Commands.Delete;
+
+
+public record SoftDeleteCarBrandCommand : IRequest
 {
+    public int Id { get; set; }
+}
 
-    public class SoftDeleteCarBrandCommand : IRequest
+public class SoftDeleteCarBrandCommandHandler : IRequestHandler<SoftDeleteCarBrandCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public SoftDeleteCarBrandCommandHandler(IApplicationDbContext context)
     {
-        public int Id { get; set; }
+        _context = context;
     }
 
-    public class SoftDeleteCarBrandCommandHandler : IRequestHandler<SoftDeleteCarBrandCommand>
+    public async Task<Unit> Handle(SoftDeleteCarBrandCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
+        var entity = await _context.CarBrands.FindAsync(request.Id);
 
-        public SoftDeleteCarBrandCommandHandler(IApplicationDbContext context)
+        if (entity == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(CarBrand), request.Id);
         }
 
-        public async Task<Unit> Handle(SoftDeleteCarBrandCommand request, CancellationToken cancellationToken)
-        {
-            var entity = await _context.CarBrands.FindAsync(request.Id);
+        entity.IsDeleted = 1;
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(CarBrand), request.Id);
-            }
+        await _context.SaveChangesAsync(cancellationToken);
 
-            entity.IsDeleted = 1;
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

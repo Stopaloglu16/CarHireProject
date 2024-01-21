@@ -1,15 +1,4 @@
-﻿using Domain.Common;
+﻿namespace Domain.Entities.CardDetailAggregate.EndPoints;
 
-namespace Domain.Entities.CardDetailAggregate.EndPoints
-{
-    public class CardDetailsResponse
-    {
-        public CardDetailsResponse()
-        {
-            systemErrorhandler = new BasicErrorHandler();
-        }
+public record CardDetailsResponse(bool IsPaid);
 
-        public BasicErrorHandler systemErrorhandler { get; set; }
-
-    }
-}

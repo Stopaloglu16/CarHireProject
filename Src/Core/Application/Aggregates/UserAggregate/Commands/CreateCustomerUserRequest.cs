@@ -1,19 +1,17 @@
 ﻿using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Aggregates.UserAggregate.Commands
+namespace Application.Aggregates.UserAggregate.Commands;
+
+public class CreateCustomerUserRequest : CreateUserRequest
 {
-    public class CreateCustomerUserRequest : CreateUserRequest
+    public CreateCustomerUserRequest()
     {
-
-        public CreateCustomerUserRequest()
-        {
-            UserTypeId = (int)UserType.Customer;
-        }
-
-        [Required]
-        public int RoleGroupId { get; set; }
-
-
+        UserTypeId = (int)UserType.Customer;
     }
+
+    [Required]
+    public int RoleGroupId { get; set; }
+
+
 }

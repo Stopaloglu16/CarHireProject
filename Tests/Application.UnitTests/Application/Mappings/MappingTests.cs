@@ -6,11 +6,6 @@ using Application.Aggregates.CarModelAggregate.Queries;
 using Application.Aggregates.UserAggregate.Queries;
 using AutoMapper;
 using Domain.Common.Mappings;
-using Domain.Entities.AddressAggregate;
-using Domain.Entities.BranchAggregate;
-using Domain.Entities.CarAggregate;
-using Domain.Entities.CarBrandsAggregate;
-using Domain.Entities.CarModelAggregate;
 using Domain.Entities.UserAggregate;
 using System.Runtime.Serialization;
 

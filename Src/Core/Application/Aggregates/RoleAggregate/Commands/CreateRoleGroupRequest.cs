@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.Aggregates.RoleAggregate.Commands
-{
-    public class CreateRoleGroupRequest
-    {
-        [Required]
-        public string RoleGroupName { get; set; }
+namespace Application.Aggregates.RoleAggregate.Commands;
 
-        public int UserTypeID { get; set; }
-    }
+public record CreateRoleGroupRequest
+{
+    [StringLength(50)]
+    public required string RoleGroupName { get; set; }
+
+    public int UserTypeID { get; set; }
 }

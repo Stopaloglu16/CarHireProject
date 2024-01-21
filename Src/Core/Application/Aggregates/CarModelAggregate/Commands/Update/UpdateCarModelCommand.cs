@@ -1,47 +1,46 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 
-namespace Application.Aggregates.CarModelAggregate.Commands.Update
+namespace Application.Aggregates.CarModelAggregate.Commands.Update;
+
+public record UpdateCarModelCommand : IRequest
 {
-    public class UpdateCarModelCommand : IRequest
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public string? CarPhoto { get; set; }
+    public int? CarPhotoLenght { get; set; }
+    public int SeatNumber { get; set; }
+    public int CarBrandId { get; set; }
+}
+
+
+public class UpdateCarModelCommandHandler : IRequestHandler<UpdateCarModelCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public UpdateCarModelCommandHandler(IApplicationDbContext context)
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? CarPhoto { get; set; }
-        public int? CarPhotoLenght { get; set; }
-        public int SeatNumber { get; set; }
-        public int CarBrandId { get; set; }
+        _context = context;
     }
 
-
-    public class UpdateCarModelCommandHandler : IRequestHandler<UpdateCarModelCommand>
+    public async Task<Unit> Handle(UpdateCarModelCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
+        var entity = await _context.CarModels.FindAsync(request.Id);
 
-        public UpdateCarModelCommandHandler(IApplicationDbContext context)
+        if (entity == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(CarModel), request.Id);
         }
 
-        public async Task<Unit> Handle(UpdateCarModelCommand request, CancellationToken cancellationToken)
-        {
-            var entity = await _context.CarModels.FindAsync(request.Id);
+        entity.Name = request.Name;
+        entity.CarPhoto = request.CarPhoto;
+        entity.CarPhotoLenght = request.CarPhotoLenght;
+        entity.SeatNumber = request.SeatNumber;
+        entity.CarBrandId = request.CarBrandId;
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(CarModel), request.Id);
-            }
+        await _context.SaveChangesAsync(cancellationToken);
 
-            entity.Name = request.Name;
-            entity.CarPhoto = request.CarPhoto;
-            entity.CarPhotoLenght = request.CarPhotoLenght;
-            entity.SeatNumber = request.SeatNumber;
-            entity.CarBrandId = request.CarBrandId;
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

@@ -1,38 +1,36 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 
-namespace Application.Aggregates.AddressAggregate.Commands.Delete
+namespace Application.Aggregates.AddressAggregate.Commands.Delete;
+
+public class SoftDeleteAddressCommand : IRequest
 {
+    public int Id { get; set; }
+}
 
-    public class SoftDeleteAddressCommand : IRequest
+public class SoftDeleteAddressCommandHandler : IRequestHandler<SoftDeleteAddressCommand>
+{
+    private readonly IApplicationDbContext _context;
+
+    public SoftDeleteAddressCommandHandler(IApplicationDbContext context)
     {
-        public int Id { get; set; }
+        _context = context;
     }
 
-    public class SoftDeleteAddressCommandHandler : IRequestHandler<SoftDeleteAddressCommand>
+    public async Task<Unit> Handle(SoftDeleteAddressCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
+        var entity = await _context.Addresses.FindAsync(request.Id);
 
-        public SoftDeleteAddressCommandHandler(IApplicationDbContext context)
+        if (entity == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(Address), request.Id);
         }
 
-        public async Task<Unit> Handle(SoftDeleteAddressCommand request, CancellationToken cancellationToken)
-        {
-            var entity = await _context.Addresses.FindAsync(request.Id);
+        entity.IsDeleted = 1;
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(Address), request.Id);
-            }
+        await _context.SaveChangesAsync(cancellationToken);
 
-            entity.IsDeleted = 1;
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

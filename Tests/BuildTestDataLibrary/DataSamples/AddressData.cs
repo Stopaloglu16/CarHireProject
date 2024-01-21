@@ -1,5 +1,5 @@
 ﻿using Application.Aggregates.AddressAggregate.Commands.Create;
-using Domain.Entities.AddressAggregate;
+using Domain.Entities;
 using Domain.Enums;
 using System.Collections;
 
@@ -36,9 +36,11 @@ namespace BuildTestDataLibrary.DataSamples
         public IEnumerator<object[]> GetEnumerator()
         {
             foreach (Address data in AddressListGenerator.Creates)
-                yield return new object[] { new CreateAddressCommand(data.Address1, data.City, data.Postcode, data.addressType) };
+                yield return new object[] { new CreateAddressCommand() { Address1 = data.Address1, City = data.City, Postcode = data.Postcode, addressType = AddressType.BranchAddress } };
         }
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
+
+    //string _Address1, string _City, string _Postcode, AddressType _addressType
 
 }

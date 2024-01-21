@@ -1,5 +1,5 @@
 ﻿using Application.Aggregates.CarExtraAggregate.Commands.Create;
-using Domain.Entities.CarExtraAggregate;
+using Domain.Entities;
 using System.Collections;
 
 namespace BuildTestDataLibrary.DataSamples

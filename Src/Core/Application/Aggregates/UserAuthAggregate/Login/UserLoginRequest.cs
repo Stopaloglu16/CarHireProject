@@ -1,23 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entities.UserAuthAggregate.Login
+namespace Domain.Entities.UserAuthAggregate.Login;
+
+[NotMapped]
+public record UserLoginRequest
 {
-    [NotMapped]
-    public class UserLoginRequest
-    {
-        [Required]
-        [StringLength(50)]
-        public string Username { get; set; }
+    [StringLength(50)]
+    public required string Username { get; init; }
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-    }
-
-
-
-
-
+    [DataType(DataType.Password)]
+    public required string Password { get; init; }
 }

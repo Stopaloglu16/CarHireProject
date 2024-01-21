@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Domain.Entities.UserAggregate;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Interfaces;
 

@@ -1,6 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using MediatR;
+using Domain.Entities;
 
 namespace Application.Aggregates.AddressAggregate.Commands.Update
 {

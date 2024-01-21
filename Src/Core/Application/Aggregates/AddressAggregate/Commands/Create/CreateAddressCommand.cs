@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces;
+using Domain.Entities;
 using Domain.Enums;
-using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.AddressAggregate.Commands.Create;
@@ -8,26 +8,15 @@ namespace Application.Aggregates.AddressAggregate.Commands.Create;
 public record CreateAddressCommand : IRequest<int>
 {
 
-    public CreateAddressCommand(string _Address1, string _City, string _Postcode, AddressType _addressType)
-    {
-        Address1 = _Address1;
-        City = _City;
-        Postcode = _Postcode;
-        addressType = _addressType;
-    }
-
-    [Required]
     [StringLength(50)]
-    public string Address1 { get; }
+    public required string Address1 { get; set; }
 
-    [Required]
     [StringLength(50)]
-    public string City { get; }
+    public required string City { get; set; }
 
-    [Required]
     [StringLength(10)]
-    public string Postcode { get; }
-    public AddressType addressType { get; }
+    public required string Postcode { get; set; }
+    public AddressType addressType { get; set; }
 
 }
 
