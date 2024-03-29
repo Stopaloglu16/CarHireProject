@@ -4,7 +4,6 @@ using Domain.Entities;
 
 namespace Application.Aggregates.CarBrandAggregate.Commands.Delete;
 
-
 public record SoftDeleteCarBrandCommand : IRequest
 {
     public int Id { get; set; }

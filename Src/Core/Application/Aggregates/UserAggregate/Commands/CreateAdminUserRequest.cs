@@ -8,11 +8,11 @@ public class CreateAdminUserRequest : CreateUserRequest
     public CreateAdminUserRequest()
     {
         UserTypeId = (int)UserType.AdminUser;
+        UserType = UserType.AdminUser;
     }
 
 
     [Required]
     public int RoleGroupId { get; set; }
-
 
 }

@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.CarAggregate.Commands.Create;
 
 public record CreateCarRequest
 {
-    public CreateCarRequest(string? numberPlates, int? branchId, int carModelId, int gearboxId, int mileage, decimal costperday = 1)
+    public CreateCarRequest(string numberPlates, int? branchId, int carModelId, Gearbox gearboxId, int mileage, decimal costperday = 1)
     {
         NumberPlates = numberPlates;
         BranchId = branchId;
@@ -20,7 +21,7 @@ public record CreateCarRequest
     public string NumberPlates { get; set; }
     public int? BranchId { get; set; }
     public int CarModelId { get; set; }
-    public int GearboxId { get; set; }
+    public Gearbox GearboxId { get; set; }
     public int Mileage { get; set; } = 0;
 
     [Required]

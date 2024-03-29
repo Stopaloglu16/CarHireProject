@@ -1,19 +1,17 @@
 ﻿using Domain.Common;
 
-namespace Application.Aggregates.CarAggregate.Commands.Update
+namespace Application.Aggregates.CarAggregate.Commands.Update;
+
+public record UpdateCarResponse
 {
-    public class UpdateCarResponse
+    public UpdateCarResponse(int id, CustomErrorHandler basicErrorHandler)
     {
-        public UpdateCarResponse(int id, BasicErrorHandler basicErrorHandler)
-        {
-            Id = id;
-            this.basicErrorHandler = basicErrorHandler;
-        }
-
-        public int Id { get; set; }
-
-        public BasicErrorHandler basicErrorHandler { get; set; } = new BasicErrorHandler();
-
-
+        Id = id;
+        this.basicErrorHandler = basicErrorHandler;
     }
+
+    public int Id { get; set; }
+
+    public CustomErrorHandler basicErrorHandler { get; set; } = new CustomErrorHandler();
+
 }

@@ -1,20 +1,17 @@
 ﻿using Domain.Common;
 
-namespace Application.Aggregates.CarAggregate.Commands.Create
+namespace Application.Aggregates.CarAggregate.Commands.Create;
+
+public record CreateCarResponse
 {
-    public class CreateCarResponse
+    public CreateCarResponse(int id, CustomErrorHandler basicErrorHandler)
     {
-        public CreateCarResponse(int id, BasicErrorHandler basicErrorHandler)
-        {
-            Id = id;
-            this.basicErrorHandler = basicErrorHandler;
-        }
-
-        public int Id { get; set; }
-
-        public BasicErrorHandler basicErrorHandler { get; set; } = new BasicErrorHandler();
-
+        Id = id;
+        this.basicErrorHandler = basicErrorHandler;
     }
 
+    public int Id { get; set; }
+
+    public CustomErrorHandler basicErrorHandler { get; set; } = new CustomErrorHandler();
 
 }

@@ -1,14 +1,13 @@
 ﻿using Domain.Entities.UserAggregate;
 
-namespace CarHire.Services.UserAuths
+namespace CarHire.Services.UserAuths;
+
+
+public interface IUserRegisterService
 {
 
-    public interface IUserRegisterService
-    {
+    Task<User> GetUserByAsync(string Username, string Token);
 
-        Task<User> GetUserByAsync(string Username, string Token);
+    Task<bool> UpdateUserAsync(int UserId, string AspId);
 
-        Task<bool> UpdateUserAsync(int UserId, string AspId);
-
-    }
 }

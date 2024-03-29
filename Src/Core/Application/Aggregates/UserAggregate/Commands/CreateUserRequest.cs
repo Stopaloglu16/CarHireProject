@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.UserAggregate.Commands;
 
@@ -19,6 +20,8 @@ public abstract class CreateUserRequest
 
     [Required]
     public int UserTypeId { get; set; }
+
+    public UserType UserType { get; set; }
 
     [Required]
     [StringLength(50)]

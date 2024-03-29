@@ -3,7 +3,7 @@ using Application.Aggregates.CarModelAggregate.Commands.Update;
 using Application.Aggregates.CarModelAggregate.Queries;
 using Application.Repositories;
 using Domain.Common;
-using Domain.Entities.CarModelAggregate;
+using Domain.Entities;
 using Domain.Utilities;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories.CarModelRepos
 {
 
-    public class CarModelRepository : EfCoreRepository<CarModel>, ICarModelRepository
+    public class CarModelRepository : EfCoreRepository<CarModel, int>, ICarModelRepository
     {
         private readonly ApplicationDbContext _dbContext;
         public CarModelRepository(ApplicationDbContext dbContext) : base(dbContext)
@@ -86,14 +86,10 @@ namespace Infrastructure.Repositories.CarModelRepos
                 CarBrandId = createCarModelRequest.CarBrandId
             });
 
-            if (myResponse.Id > 0)
-            {
-                return new CreateCarModelResponse(myResponse.Id, new BasicErrorHandler());
-            }
-            else
-            {
-                return new CreateCarModelResponse(myResponse.Id, new BasicErrorHandler("Repo issue"));
-            }
+
+            
+            return new CreateCarModelResponse(myResponse.Id);
+            
         }
 
         public async Task<UpdateCarModelResponse> UpdateCarModel(UpdateCarModelRequest updateCarModelRequest)
@@ -110,11 +106,11 @@ namespace Infrastructure.Repositories.CarModelRepos
 
             if (myResponse.Id > 0)
             {
-                return new UpdateCarModelResponse(myResponse.Id, new BasicErrorHandler());
+                return new UpdateCarModelResponse(myResponse.Id, new CustomErrorHandler());
             }
             else
             {
-                return new UpdateCarModelResponse(myResponse.Id, new BasicErrorHandler("Repo issue"));
+                return new UpdateCarModelResponse(myResponse.Id, new CustomErrorHandler("Repo issue"));
             }
         }
 

@@ -4,7 +4,7 @@ using Domain.Entities.UserAggregate;
 
 namespace Application.Repositories
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<User, int>
     {
         Task<IEnumerable<UserDto>> GetUsers(bool IsActive, int UserTypeId);
 

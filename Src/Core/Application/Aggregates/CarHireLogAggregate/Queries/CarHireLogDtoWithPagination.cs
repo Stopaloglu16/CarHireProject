@@ -1,7 +1,7 @@
 ﻿namespace Application.Aggregates.CarHireAggregate.Queries;
 
 
-public record GetCarHireLogDtoWithPagination
+public record CarHireLogDtoWithPagination
 {
     public int ListId { get; init; }
     public int PageNumber { get; init; } = 1;
@@ -9,9 +9,9 @@ public record GetCarHireLogDtoWithPagination
 }
 
 
-public record GetCarHireLogDto
+public record CarHireLogDtoWithPaging
 {
-    public GetCarHireLogDto(int carId, string carPhoto, string carDescription, int pickLocationId, string pickLocation,
+    public CarHireLogDtoWithPaging(int carId, string carPhoto, string carDescription, int pickLocationId, string pickLocation,
                               DateTime pickDatetime, int returnLocationId, string returnLocation, DateTime returnDatetime,
                               decimal totalcost)
     {

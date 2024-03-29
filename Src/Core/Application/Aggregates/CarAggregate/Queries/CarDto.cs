@@ -17,7 +17,6 @@ public record CarDto : IMapFrom<Car>
     public int CarModelId { get; set; }
     public string? CarModelName { get; set; }
 
-    public int GearboxId { get; set; }
     public string? GearboxName { get; set; }
     public int Mileage { get; set; } = 0;
 
@@ -31,6 +30,5 @@ public record CarDto : IMapFrom<Car>
                     .ForMember(d => d.GearboxName, opt => opt.MapFrom(ss => ((Gearbox)ss.GearboxId).ToString()))
                     .ForMember(d => d.CarBrandId, opt => opt.Ignore());
     }
-
 
 }

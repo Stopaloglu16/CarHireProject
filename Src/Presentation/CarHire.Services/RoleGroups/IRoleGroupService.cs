@@ -2,14 +2,13 @@
 using Application.Aggregates.RoleAggregate.Commands;
 using Application.Aggregates.RoleAggregate.Queries;
 
-namespace CarHire.Services.RoleGroups
+namespace CarHire.Services.RoleGroups;
+
+public interface IRoleGroupService
 {
-    public interface IRoleGroupService
-    {
 
-        Task<CreateRoleGroupResponse> Add(CreateRoleGroupRequest roleGroup);
+    Task<CreateRoleGroupResponse> Add(CreateRoleGroupRequest roleGroup);
 
-        Task<RoleGroupDto> GetRoleGroupById(int Id);
+    Task<RoleGroupDto> GetRoleGroupById(int Id);
 
-    }
 }

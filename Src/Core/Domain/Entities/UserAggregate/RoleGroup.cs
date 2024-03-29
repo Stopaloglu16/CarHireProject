@@ -1,10 +1,11 @@
 ﻿using Domain.Common;
+using Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserAggregate;
 
-public class RoleGroup : BaseEntity<int>
+public class RoleGroup : BaseAuditableEntity<int>
 {
     public RoleGroup()
     {
@@ -14,13 +15,10 @@ public class RoleGroup : BaseEntity<int>
 
 
     [Required]
-    [Column(TypeName = "varchar(150)")]
+    [Column(TypeName = "varchar(50)")]
     public string RoleGroupName { get; set; }
 
-
-    public int UserTypeID { get; set; }
-
-
+    public UserType UserTypeId { get; set; }
 
 
     [InverseProperty(nameof(User.RoleGroup))]
@@ -32,7 +30,5 @@ public class RoleGroup : BaseEntity<int>
 
     [InverseProperty(nameof(RoleRoleGroup.RoleGroup))]
     public virtual ICollection<RoleRoleGroup> RoleRoleGroups { get; set; }
-
-
 
 }

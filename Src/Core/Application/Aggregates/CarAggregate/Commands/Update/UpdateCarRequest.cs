@@ -18,9 +18,9 @@ public record UpdateCarRequest
 
     public int Id { get; set; }
 
-    [Required]
+    
     [StringLength(10)]
-    public string NumberPlates { get; set; }
+    public required string NumberPlates { get; set; }
     public int? BranchId { get; set; }
     public int CarModelId { get; set; }
     public int GearboxId { get; set; }

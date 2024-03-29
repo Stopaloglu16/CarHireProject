@@ -4,7 +4,7 @@ using Domain.Entities.UserAggregate;
 
 namespace Application.Repositories
 {
-    public interface IRoleGroupRepository : IRepository<RoleGroup>
+    public interface IRoleGroupRepository : IRepository<RoleGroup, int>
     {
 
         Task<IEnumerable<RoleGroupDto>> GetRoleGroups();

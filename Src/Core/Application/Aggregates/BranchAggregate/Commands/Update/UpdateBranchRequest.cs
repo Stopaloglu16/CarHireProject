@@ -1,18 +1,23 @@
-﻿using Application.Aggregates.AddressAggregate.Queries;
-using Domain.Utilities;
+﻿using Domain.Utilities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.BranchAggregate.Commands.Update;
 
-public class UpdateBranchRequest
+public record UpdateBranchRequest
 {
     public int Id { get; set; }
 
-    [Required]
     [StringLength(50)]
-    public string? BranchName { get; set; }
+    public required string BranchName { get; set; }
 
-    public AddressDto? Address { get; set; }
+    [StringLength(50)]
+    public string? Address1 { get; set; }
+
+    [StringLength(50)]
+    public string? City { get; set; }
+
+    [StringLength(10)]
+    public string? Postcode { get; set; }
 
     public List<ChosenItem> carChosenValues { get; set; }
 

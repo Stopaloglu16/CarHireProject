@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Aggregates\BranchAggregate\Commands\Delete\" />
     <Folder Include="Aggregates\CarAggregate\Commands\Delete\" />
     <Folder Include="Aggregates\CarHireLogAggregate\Commands\Delete\" />
     <Folder Include="Aggregates\CarModelAggregate\Commands\Delete\" />

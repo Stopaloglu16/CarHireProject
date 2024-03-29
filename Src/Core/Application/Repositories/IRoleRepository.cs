@@ -3,7 +3,7 @@ using Domain.Entities.UserAggregate;
 
 namespace Application.Repositories
 {
-    public interface IRoleRepository : IRepository<Role>
+    public interface IRoleRepository : IRepository<Role, int>
     {
 
         //Task<IEnumerable<RoleDto>> GetCars();

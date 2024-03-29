@@ -1,80 +1,81 @@
 ﻿using Application.Aggregates.CarAggregate.Queries;
+using Application.Aggregates.CarHireLogAggregate.Queries;
 using Application.Repositories;
 using Dapper;
-using Domain.Entities.CarHireAggregate;
+using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Infrastructure.Repositories.CarHireRepos
+namespace Infrastructure.Repositories.CarHireRepos;
+
+
+public class CarHireRepository : EfCoreRepository<CarHireLog, long>, ICarHireRepository
 {
+    private readonly ApplicationDbContext _dbContext;
+    private readonly IConfiguration configuration;
 
-    public class CarHireRepository : EfCoreRepository<CarHireObj>, ICarHireRepository
+    public CarHireRepository(ApplicationDbContext dbContext, IConfiguration configuration) : base(dbContext)
     {
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IConfiguration configuration;
+        _dbContext = dbContext;
+        this.configuration = configuration;
+    }
 
-        public CarHireRepository(ApplicationDbContext dbContext, IConfiguration configuration) : base(dbContext)
+
+    public async Task<bool> CheckCarAvabilityById(int Id, DateTime rentFrom, DateTime rentTo)
+    {
+        //await Task.Delay(100);
+
+        //   var careHireList = await _context.CarHires.FromSqlRaw("Select * FROM [Portalnow].[dbo].[PostcodeGroups] " +
+        //"WHERE Id IN(SELECT[PostcodeGroupId]" +
+        //"FROM[Portalnow].[dbo].[CompanyZonePostcodes] " +
+        // "WHERE[PostcodeId] = ( " +
+        //          "SELECT [Id] FROM[Portalnow].[dbo].[Postcodes] " +
+        //          "WHERE IsDeleted = 0 AND PostcodeText = '" + _carId + "') ) ").ToListAsync();
+
+
+        //var query = from n in db.BDatas
+        //            orderby n.AddDate, n.CountryCode
+        //            where n.CountryCode == "GB"
+        //            && (n.AddDate >= startDate && n.AddDate < endDate)
+        //            select n;
+
+        var myRtn = await _dbContext.CarHireLogs.Where(cc => cc.CarId == Id &&
+                                                                     (
+                                                                     (cc.PickUpDate <= rentFrom &&
+                                                                      cc.ReturnDate >= rentFrom) ||
+                                                                     (cc.PickUpDate <= rentTo &&
+                                                                      cc.ReturnDate >= rentTo)
+                                                                     )
+                                                                     ).ToListAsync();
+
+        if (myRtn == null)
         {
-            _dbContext = dbContext;
-            this.configuration = configuration;
+            return false;
+        }
+        else if (myRtn.Count == 0)
+        {
+            return true;
+        }
+        else if (myRtn.Count > 0)
+        {
+            return false;
+        }
+        else
+        {
+            return false;
         }
 
+    }
 
-        public async Task<bool> CheckCarAvabilityById(int Id, DateTime rentFrom, DateTime rentTo)
-        {
-            //await Task.Delay(100);
+    public async Task<IEnumerable<CarHireCarDto>> GetAvailableCars(int pickupBranchId, DateTime pickupDate, DateTime returnDate)
+    {
 
-            //   var careHireList = await _context.CarHires.FromSqlRaw("Select * FROM [Portalnow].[dbo].[PostcodeGroups] " +
-            //"WHERE Id IN(SELECT[PostcodeGroupId]" +
-            //"FROM[Portalnow].[dbo].[CompanyZonePostcodes] " +
-            // "WHERE[PostcodeId] = ( " +
-            //          "SELECT [Id] FROM[Portalnow].[dbo].[Postcodes] " +
-            //          "WHERE IsDeleted = 0 AND PostcodeText = '" + _carId + "') ) ").ToListAsync();
+        var parameters = new { PickUpBranchId = pickupBranchId, PickDate = pickupDate, ReturnDate = returnDate };
 
-
-            //var query = from n in db.BDatas
-            //            orderby n.AddDate, n.CountryCode
-            //            where n.CountryCode == "GB"
-            //            && (n.AddDate >= startDate && n.AddDate < endDate)
-            //            select n;
-
-            var myRtn = await _dbContext.CarHires.Where(cc => cc.CarId == Id &&
-                                                                         (
-                                                                         (cc.PickUpDate <= rentFrom &&
-                                                                          cc.ReturnDate >= rentFrom) ||
-                                                                         (cc.PickUpDate <= rentTo &&
-                                                                          cc.ReturnDate >= rentTo)
-                                                                         )
-                                                                         ).ToListAsync();
-
-            if (myRtn == null)
-            {
-                return false;
-            }
-            else if (myRtn.Count == 0)
-            {
-                return true;
-            }
-            else if (myRtn.Count > 0)
-            {
-                return false;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
-        public async Task<IEnumerable<CarHireCarDto>> GetAvailableCars(int pickupBranchId, DateTime pickupDate, DateTime returnDate)
-        {
-
-            var parameters = new { PickUpBranchId = pickupBranchId, PickDate = pickupDate, ReturnDate = returnDate };
-
-            var sql = @"SELECT carDt.[Id]
+        var sql = @"SELECT carDt.[Id]
                                       ,[CarModelId]
                                       ,[GearboxId]
 	                                  ,CHOOSE (([GearboxId]+1), 'Manual','Automatic') [GearboxName]
@@ -95,33 +96,47 @@ namespace Infrastructure.Repositories.CarHireRepos
                                (@PickDate BETWEEN PickUpDate AND CASE WHEN @PickUpBranchId != ReturnBranchId THEN DATEADD(dd,2, ReturnDate) ELSE DATEADD(dd,1, ReturnDate) END OR 
 	                            @ReturnDate BETWEEN PickUpDate AND CASE WHEN @PickUpBranchId != ReturnBranchId THEN DATEADD(dd,2, ReturnDate) ELSE DATEADD(dd,1, ReturnDate) END ))";
 
-            using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
-            {
-                connection.Open();
-                var result = await connection.QueryAsync<CarHireCarDto>(sql, parameters);
-                return result.ToList();
-            }
-
+        using (var connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection")))
+        {
+            connection.Open();
+            var result = await connection.QueryAsync<CarHireCarDto>(sql, parameters);
+            return result.ToList();
         }
 
-
-        //public async Task<IEnumerable<BranchDto>> GetBranches()
-        //{
-
-        //    return await GetListByBool(true).Include(bb => bb.Address)
-        //                                            .Select(ss => new BranchDto
-        //                                            {
-        //                                                Id = ss.Id,
-        //                                                BranchName = ss.BranchName
-        //                                                 ,
-        //                                                Address = new AddressDto()
-        //                                                {
-        //                                                    Address1 = ss.Address.Address1,
-        //                                                    City = ss.Address.City,
-        //                                                    Postcode = ss.Address.Postcode
-        //                                                }
-
-        //                                            }).ToListAsync();
-        //}
     }
+
+    public Task<IEnumerable<CarHireLogDto>> GetCarHiresByBranch(int branchId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<CarHireLogDto>> GetCarHiresByCustomer(int userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> HireCar(int carId)
+    {
+        throw new NotImplementedException();
+    }
+
+
+    //public async Task<IEnumerable<BranchDto>> GetBranches()
+    //{
+
+    //    return await GetListByBool(true).Include(bb => bb.Address)
+    //                                            .Select(ss => new BranchDto
+    //                                            {
+    //                                                Id = ss.Id,
+    //                                                BranchName = ss.BranchName
+    //                                                 ,
+    //                                                Address = new AddressDto()
+    //                                                {
+    //                                                    Address1 = ss.Address.Address1,
+    //                                                    City = ss.Address.City,
+    //                                                    Postcode = ss.Address.Postcode
+    //                                                }
+
+    //                                            }).ToListAsync();
+    //}
 }

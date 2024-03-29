@@ -4,7 +4,7 @@ namespace Application.Aggregates.CarModelAggregate.Commands.Update
 {
     public class UpdateCarModelResponse
     {
-        public UpdateCarModelResponse(int id, BasicErrorHandler basicErrorHandler)
+        public UpdateCarModelResponse(int id, CustomErrorHandler basicErrorHandler)
         {
             Id = id;
             this.basicErrorHandler = basicErrorHandler;
@@ -12,7 +12,7 @@ namespace Application.Aggregates.CarModelAggregate.Commands.Update
 
         public int Id { get; set; }
 
-        public BasicErrorHandler basicErrorHandler { get; set; } = new BasicErrorHandler();
+        public CustomErrorHandler basicErrorHandler { get; set; } = new CustomErrorHandler();
 
     }
 

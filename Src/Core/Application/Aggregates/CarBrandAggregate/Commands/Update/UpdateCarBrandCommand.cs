@@ -10,7 +10,6 @@ public record UpdateCarBrandCommand : IRequest
     public string? Name { get; set; }
 }
 
-
 public class UpdateCarBrandCommandHandler : IRequestHandler<UpdateCarBrandCommand>
 {
     private readonly IApplicationDbContext _context;

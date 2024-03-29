@@ -3,26 +3,22 @@ using Application.Aggregates.CarModelAggregate.Commands.Update;
 using Application.Aggregates.CarModelAggregate.Queries;
 using Domain.Utilities;
 
-namespace CarHire.Services.CarModelService
+namespace CarHire.Services.CarModelService;
+public interface ICarModelService
 {
+    Task<IEnumerable<CarModelDto>> GetCarModels();
 
-    public interface ICarModelService
-    {
-        Task<IEnumerable<CarModelDto>> GetCarModels();
+    Task<CarModelDto> GetCarModelById(int Id);
 
-        Task<CarModelDto> GetCarModelById(int Id);
+    Task<IEnumerable<CarModelDto>> GetCarModelsByBrandId(int BrandId);
 
-        Task<IEnumerable<CarModelDto>> GetCarModelsByBrandId(int BrandId);
+    Task<IEnumerable<SelectListItem>> GetCarModelList();
 
-        Task<IEnumerable<SelectListItem>> GetCarModelList();
+    Task<IEnumerable<SelectListItem>> GetCarModelListById(int carBrandId);
 
-        Task<IEnumerable<SelectListItem>> GetCarModelListById(int carBrandId);
+    Task<IEnumerable<CarModelDto>> GetCarModelDataListById(int carBrandId);
 
-        Task<IEnumerable<CarModelDto>> GetCarModelDataListById(int carBrandId);
-
-        Task<CreateCarModelResponse> Add(CreateCarModelRequest carModel);
-        Task<UpdateCarModelResponse> Update(UpdateCarModelRequest carModel);
-
-    }
+    Task<CreateCarModelResponse> Add(CreateCarModelRequest carModel);
+    Task<UpdateCarModelResponse> Update(UpdateCarModelRequest carModel);
 
 }

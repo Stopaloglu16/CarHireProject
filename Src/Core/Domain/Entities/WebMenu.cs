@@ -6,23 +6,23 @@ namespace Domain.Entities;
 
 public class WebMenu : BaseEntity<int>
 {
-
     [Required]
-    [Column(TypeName = "varchar(150)")]
+    [Column(TypeName = "varchar(50)")]
     public string MainName { get; set; }
 
-    [Column(TypeName = "varchar(150)")]
+    [Column(TypeName = "varchar(50)")]
     public string SubName { get; set; }
 
     [Required]
-    [Column(TypeName = "varchar(150)")]
+    [Column(TypeName = "varchar(50)")]
     public string LinkName { get; set; }
 
     [Required]
     [Column(TypeName = "varchar(150)")]
     public string LinkUrl { get; set; }
     public int MenuOrder { get; set; }
-    public int RoleId { get; set; }
+    
+    //public int RoleId { get; set; }
 
     [Required]
     [Column(TypeName = "varchar(50)")]

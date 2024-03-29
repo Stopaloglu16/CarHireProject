@@ -3,7 +3,6 @@ using Domain.Entities;
 
 namespace Application.Aggregates.CarBrandAggregate.Commands.Create;
 
-
 public record CreateCarBrandCommand : IRequest<int>
 {
     public CreateCarBrandCommand(string name)

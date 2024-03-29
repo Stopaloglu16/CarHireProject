@@ -5,35 +5,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserAggregate;
 
-public class User : BaseEntity<int>
+public class User : BaseAuditableEntity<int>
 {
-
-    public User()
-    {
-        FullName = "";
-        //RefreshTokens = new HashSet<RefreshToken>();
-    }
+    //public User()
+    //{
+    //    FullName = "";
+    //}
 
 
-    [Required]
+    [Column(TypeName = "varchar(100)")]
+    public required string FullName { get; set; }
+    
     [Column(TypeName = "varchar(250)")]
-    public string FullName { get; set; }
-
-    [Required]
-    [Column(TypeName = "varchar(50)")]
-    public string UserName { get; set; }
-
-    [Required]
-    [Column(TypeName = "varchar(250)")]
-    public string UserEmail { get; set; }
+    public required string UserEmail { get; set; }
 
 
-    public int UserTypeId { get; set; }
-
-    [ForeignKey(nameof(UserTypeId))]
-    [InverseProperty("Users")]
-    public virtual UserType userType { get; set; }
-
+    public UserType UserTypeId { get; set; }
 
 
     public int RoleGroupId { get; set; }
@@ -61,9 +48,5 @@ public class User : BaseEntity<int>
 
     public int? BranchId { get; set; }
     public Branch Branch { get; set; }
-
-
-    public int? AddressId { get; set; }
-    public Address Address { get; set; }
 
 }

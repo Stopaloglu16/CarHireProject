@@ -7,8 +7,7 @@ using Domain.Utilities;
 
 namespace Application.Repositories
 {
-
-    public interface ICarModelRepository : IRepository<CarModel>
+    public interface ICarModelRepository : IRepository<CarModel, int>
     {
         Task<IEnumerable<CarModelDto>> GetCarModels();
         Task<CarModelDto> GetCarModelById(int Id);
@@ -19,5 +18,4 @@ namespace Application.Repositories
         Task<UpdateCarModelResponse> UpdateCarModel(UpdateCarModelRequest updateCarModelRequest);
 
     }
-
 }

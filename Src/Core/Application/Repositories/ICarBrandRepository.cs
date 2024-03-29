@@ -5,14 +5,10 @@ using Domain.Utilities;
 
 namespace Application.Repositories
 {
-    public interface ICarBrandRepository : IRepository<CarBrand>
+    public interface ICarBrandRepository : IRepository<CarBrand, int>
     {
         Task<IEnumerable<CarBrandDto>> GetCarBrands();
-
         Task<CarBrandDto> GetCarBrandById(int Id);
-
         Task<IEnumerable<SelectListItem>> GetCarBrandList();
-
     }
-
 }

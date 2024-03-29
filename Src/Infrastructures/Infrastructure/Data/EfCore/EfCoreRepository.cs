@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Data.EfCore
 {
-    public class EfCoreRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity<int>
+    public class EfCoreRepository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
 
         //Data/EfCore
@@ -28,13 +28,13 @@ namespace Infrastructure.Data.EfCore
         }
 
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(TKey id)
         {
             return await context.Set<TEntity>().FindAsync(id);
         }
 
 
-        public IQueryable<TEntity> IncludeMultiple(int id, params Expression<Func<TEntity, object>>[] includes)
+        public IQueryable<TEntity> IncludeMultiple(TKey id, params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = null;
 
@@ -50,8 +50,7 @@ namespace Infrastructure.Data.EfCore
                 query = context.Set<TEntity>();
             }
 
-
-            return query.Where(cc => cc.Id == id).AsQueryable();
+            return query.Where(cc => cc.Id.Equals(id)).AsQueryable();
 
         }
 
@@ -86,7 +85,7 @@ namespace Infrastructure.Data.EfCore
             return entity;
         }
 
-        public async Task<TEntity> DeleteAsync(int id)
+        public async Task<TEntity> DeleteAsync(TKey id)
         {
             var entity = await context.Set<TEntity>().FindAsync(id);
             if (entity == null)

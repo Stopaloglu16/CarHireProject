@@ -1,3 +1,11 @@
 Add-Migration 15ct -Context Infrastructure.Data.ApplicationDbContext
+add-migration Initial -context CarHireInfra.Data.ApplicationDbContext -project Src\Infrastructures\CarHireInfra.SqliteMigrations -Args "--Provider Sqlite"
+add-migration Initial -context CarHireInfra.Data.ApplicationDbContext -project Src\Infrastructures\CarHireInfra.SqlServerMigrations -Args "--Provider SqlServer"
 
 update-database -Context Infrastructure.Data.ApplicationDbContext
+
+
+dir
+cd .\Directory
+dotnet ef migrations add InitialCreate
+dotnet ef database update

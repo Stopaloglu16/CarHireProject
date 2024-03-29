@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
-public class CarExtra : BaseEntity<int>
+public class CarExtra : BaseAuditableEntity<int>
 {
 
     [Required]

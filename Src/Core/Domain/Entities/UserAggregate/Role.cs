@@ -4,18 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserAggregate;
 
-public class Role : BaseEntity<int>
+public class Role : BaseAuditableEntity<int>
 {
 
     [Required]
     [Column(TypeName = "varchar(150)")]
     public string RoleName { get; set; }
-
-
-    [Required]
-    [Column(TypeName = "varchar(150)")]
-    public string RoleDisplayName { get; set; }
-
 
 
     [InverseProperty(nameof(RoleUser.Roles))]

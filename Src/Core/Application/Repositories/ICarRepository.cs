@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Application.Repositories
 {
-    public interface ICarRepository : IRepository<Car>
+    public interface ICarRepository : IRepository<Car, int>
     {
         Task<IEnumerable<CarDto>> GetCars();
         Task<CarDto> GetCarById(int Id);

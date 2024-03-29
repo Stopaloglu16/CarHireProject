@@ -11,12 +11,6 @@ namespace Domain.Common
         [Required]
         public T Id { get; set; }
 
-        //object IEntity.Id
-        //{
-        //    get { return Id; }
-        //    set { }
-        //}
-
         public byte IsDeleted { get; set; } = 0;
     }
 }

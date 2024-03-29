@@ -1,9 +1,53 @@
-﻿using System.Net.Mail;
+﻿using Application.Common.Models;
+using Domain.Interfaces;
+using Microsoft.Extensions.Logging;
+using System.Net.Mail;
 
 namespace Infrastructure.Abstractions;
 
-public class SendEmail
+public class EmailSender : IEmailSender
 {
+    private readonly ILogger<EmailSender> _logger;
+
+    public EmailSender(ILogger<EmailSender> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task SendEmailAsync(EmailRequest request)
+    {
+
+        //Chaging to https://www.mailinator.com
+
+        var emailClient = new SmtpClient("localhost");
+
+        var message = new MailMessage
+        {
+            From = new MailAddress(request.FromMail),
+            Subject = request.Subject,
+            Body = request.Body
+        };
+
+        foreach (string to in request.ToMail)
+        {
+            message.To.Add(new MailAddress(to));
+        }
+
+        //TODO:EmailService if there was error, try at least three times. 
+        try
+        {
+            await emailClient.SendMailAsync(message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "CleanArchitecture EmailService: Unhandled Exception for Request {@Request}", request);
+        }
+
+        _logger.LogWarning($"Sending email to {request.ToMail} from {request.FromMail} with subject {request.Subject}.");
+
+    }
+
+
     public static void SendRegister(string Useremail, string Username, string SystemCode)
     {
         try
@@ -53,4 +97,6 @@ public class SendEmail
             ;
         }
     }
+
+   
 }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
-public class Car : AuditableEntity<int>
+public class Car : BaseAuditableEntity<int>
 {
     public Car()
     {
@@ -20,7 +20,8 @@ public class Car : AuditableEntity<int>
     public int? BranchId { get; set; }
     public Branch Branch { get; set; }
 
-    public int CarModelId { get; set; }
+    
+    public required int CarModelId { get; set; }
     public CarModel CarModel { get; set; }
 
     public Gearbox GearboxId { get; set; }

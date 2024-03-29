@@ -1,44 +1,43 @@
 ﻿using Application.Aggregates.CarBrandAggregate.Queries;
 using Application.Repositories;
-using Domain.Entities.CarBrandsAggregate;
+using Domain.Entities;
 using Domain.Utilities;
 using Infrastructure.Data;
 using Infrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.CarBrandRepos
+namespace Infrastructure.Repositories.CarBrandRepos;
+
+public class CarBrandRepository : EfCoreRepository<CarBrand, int>, ICarBrandRepository
 {
-    public class CarBrandRepository : EfCoreRepository<CarBrand>, ICarBrandRepository
+    private readonly ApplicationDbContext _dbContext;
+    public CarBrandRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
-        private readonly ApplicationDbContext _dbContext;
-        public CarBrandRepository(ApplicationDbContext dbContext) : base(dbContext)
+        _dbContext = dbContext;
+    }
+
+    public async Task<CarBrandDto> GetCarBrandById(int Id)
+    {
+        var carBrand = await GetByIdAsync(Id);
+
+        if (carBrand == null) return null;
+
+        return new CarBrandDto() { Id = carBrand.Id, Name = carBrand.Name };
+    }
+
+    public async Task<IEnumerable<SelectListItem>> GetCarBrandList()
+    {
+        return await GetListByBool(true).Select(ss => new SelectListItem(ss.Id, ss.Name))
+                                            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<CarBrandDto>> GetCarBrands()
+    {
+        return await GetListByBool(true).Select(ss => new CarBrandDto
         {
-            _dbContext = dbContext;
-        }
+            Id = ss.Id,
+            Name = ss.Name
 
-        public async Task<CarBrandDto> GetCarBrandById(int Id)
-        {
-            var carBrand = await GetByIdAsync(Id);
-
-            if (carBrand == null) return null;
-
-            return new CarBrandDto() { Id = carBrand.Id, Name = carBrand.Name };
-        }
-
-        public async Task<IEnumerable<SelectListItem>> GetCarBrandList()
-        {
-            return await GetListByBool(true).Select(ss => new SelectListItem(ss.Id, ss.Name))
-                                                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<CarBrandDto>> GetCarBrands()
-        {
-            return await GetListByBool(true).Select(ss => new CarBrandDto
-            {
-                Id = ss.Id,
-                Name = ss.Name
-
-            }).ToListAsync();
-        }
+        }).ToListAsync();
     }
 }

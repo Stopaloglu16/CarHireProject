@@ -5,12 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
-public class Branch : AuditableEntity<int>
+public class Branch : BaseAuditableEntity<int>
 {
-
     public Branch()
     {
-
         Users = new HashSet<User>();
         Cars = new HashSet<Car>();
     }
@@ -19,16 +17,25 @@ public class Branch : AuditableEntity<int>
     [Column(TypeName = "varchar(50)")]
     public string BranchName { get; set; } = string.Empty;
 
-    public int AddressId { get; set; }
-    public Address Address { get; set; }
+    [Required]
+    [Column(TypeName = "varchar(50)")]
+    public string? Address1 { get; set; }
 
+    [Required]
+    [Column(TypeName = "varchar(50)")]
+    public string? City { get; set; }
+
+    [Required]
+    [Column(TypeName = "varchar(10)")]
+    public string? Postcode { get; set; }
+
+    
     /// <summary>
     /// Map to branch users
     /// </summary>
     public virtual ICollection<User> Users { get; set; }
 
     public virtual ICollection<Car> Cars { get; set; }
-
 
 
     [InverseProperty("PickUpBranch")]

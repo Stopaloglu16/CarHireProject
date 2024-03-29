@@ -1,38 +1,36 @@
 ﻿using Application.Aggregates.RoleAggregate.Commands;
 using Application.Aggregates.RoleAggregate.Queries;
 using Application.Repositories;
-using Domain.Entities.RoleAggregate;
+using Domain.Entities.UserAggregate;
 
-namespace CarHire.Services.RoleGroups
+namespace CarHire.Services.RoleGroups;
+
+
+public class RoleGroupService : IRoleGroupService
 {
 
-    public class RoleGroupService : IRoleGroupService
+    private readonly IRoleGroupRepository _roleGroupRepository;
+
+    public RoleGroupService(IRoleGroupRepository roleGroupRepository)
     {
+        _roleGroupRepository = roleGroupRepository;
+    }
 
-        private readonly IRoleGroupRepository _roleGroupRepository;
-
-        public RoleGroupService(IRoleGroupRepository roleGroupRepository)
+    public async Task<CreateRoleGroupResponse> Add(CreateRoleGroupRequest roleGroup)
+    {
+        var myReturn = await _roleGroupRepository.AddAsync(new RoleGroup()
         {
-            _roleGroupRepository = roleGroupRepository;
-        }
+            RoleGroupName = roleGroup.RoleGroupName
+            //UserTypeID = roleGroup.UserTypeID
+        });
 
-        public async Task<CreateRoleGroupResponse> Add(CreateRoleGroupRequest roleGroup)
-        {
+        if (myReturn == null) return new CreateRoleGroupResponse(0);
 
-            var myReturn = await _roleGroupRepository.AddAsync(new RoleGroup()
-            {
-                RoleGroupName = roleGroup.RoleGroupName,
-                UserTypeID = roleGroup.UserTypeID
-            });
+        return new CreateRoleGroupResponse(myReturn.Id);
+    }
 
-            if (myReturn == null) return new CreateRoleGroupResponse(0, new Domain.Common.BasicErrorHandler("SystemIssue"));
-
-            return new CreateRoleGroupResponse(myReturn.Id, new Domain.Common.BasicErrorHandler());
-        }
-
-        public async Task<RoleGroupDto> GetRoleGroupById(int Id)
-        {
-            return await _roleGroupRepository.GetRoleGroupById(Id);
-        }
+    public async Task<RoleGroupDto> GetRoleGroupById(int Id)
+    {
+        return await _roleGroupRepository.GetRoleGroupById(Id);
     }
 }

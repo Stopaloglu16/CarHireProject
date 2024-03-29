@@ -4,7 +4,7 @@ using Domain.Entities;
 
 namespace Application.Repositories
 {
-    public interface IWebMenuRepository : IRepository<WebMenu>
+    public interface IWebMenuRepository : IRepository<WebMenu, int>
     {
         Task<IEnumerable<WebMenuDto>> GetHomeMenu();
 

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities;
 
 
-public class CarHireLog : AuditableEntity<int>
+public class CarHireLog : BaseAuditableEntity<long>
 {
     public int CarId { get; set; }
     public Car Car { get; set; }
