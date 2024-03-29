@@ -33,16 +33,11 @@ enter into a contract with the rental company: they are agreeing to provide the 
 
 # Technologies
 
-**[`.NET Core 6`](https://dotnet.microsoft.com/download)**
+**[`.NET Core 8`](https://dotnet.microsoft.com/download)**
 **[`Blazor`](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor)** 
 **[`EF Core`](https://github.com/dotnet/efcore)**
 **[`API swagger`](https://swagger.io)**
-
-# UML Design
-
-<details><summary> UML </summary><blockquote>
-<img src="ScrShot/CarHire UML.jpeg" name="image-name">
-</blockquote></details>
+**['Serilogger'](https://serilog.net/)**
 
 # Design Template
 
@@ -70,11 +65,11 @@ https://wireframepro.mockflow.com/
 </blockquote></details>
 
 <details><summary> Customer </summary><blockquote>
-<details><summary> Car Search </summary><blockquote>
+<details><summary> Car Search\Book </summary><blockquote>
 <img src="ScrShot/CustomerCarSearch.png" name="image-name">
 </blockquote></details>
-<details><summary> Car Book </summary><blockquote>
-<img src="ScrShot/CustomerCarBook.png" name="image-name">
+<details><summary> Car List </summary><blockquote>
+<img src="ScrShot/Customer List.png" name="image-name">
 </blockquote></details>
 </blockquote></details>
 
