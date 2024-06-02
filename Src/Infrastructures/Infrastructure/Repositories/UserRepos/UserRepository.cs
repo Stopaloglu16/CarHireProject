@@ -3,11 +3,11 @@ using Application.Aggregates.UserAggregate.Queries;
 using Application.Repositories;
 using Domain.Entities.UserAggregate;
 using Domain.Enums;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.UserRepos;
+namespace CarHireInfrastructure.Repositories.UserRepos;
 
 public class UserRepository : EfCoreRepository<User, int>, IUserRepository
 {
@@ -73,7 +73,7 @@ public class UserRepository : EfCoreRepository<User, int>, IUserRepository
         return await GetListByBool(IsActive).Where(uu => uu.UserTypeId == (UserType)UserTypeId)
                                              .Select(ss => new UserDto()
                                              {
-                                                 FullName = ss.FullName ,
+                                                 FullName = ss.FullName,
                                                  UserType = ((UserType)ss.UserTypeId).ToString()
 
                                              }).ToListAsync();

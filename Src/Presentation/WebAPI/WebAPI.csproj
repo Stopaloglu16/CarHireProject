@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>d6facf36-98b9-43fa-bf44-706d35e4df32</UserSecretsId>
@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -19,8 +19,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Application\Application.csproj" />
-    <ProjectReference Include="..\..\Infrastructures\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\CarHire.Services\CarHire.Services.csproj" />
+    <ProjectReference Include="..\..\Infrastructures\CarHire.Services\CarHire.Services.csproj" />
+    <ProjectReference Include="..\..\Infrastructures\CarHireInfrastructure.SqliteMigrations\CarHireInfrastructure.SqliteMigrations.csproj" />
+    <ProjectReference Include="..\..\Infrastructures\CarHireInfrastructure.SqlServerMigrations\CarHireInfrastructure.SqlServerMigrations.csproj" />
   </ItemGroup>
 
 </Project>

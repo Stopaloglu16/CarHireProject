@@ -13,9 +13,5 @@ namespace Application.Repositories
         Task<UserDto> GetUserByAspId(string AspId);
 
         Task<UserDto> GetUserWithRolesById(int Id);
-
-
-
     }
-
 }

@@ -1,6 +1,5 @@
 ﻿using Application.Repositories;
 using Domain.Common;
-using Domain.Entities.RoleAggregate;
 using Domain.Entities.UserAggregate;
 using Domain.Entities.UserAuthAggregate.Login;
 using Domain.Utilities;
@@ -33,13 +32,12 @@ namespace WebAPI.Controllers.UserAuth
         // private readonly IApiUserService _apiUserService;
 
 
-        public LoginController(
-        UserManager<IdentityUser> userManager,
-        SignInManager<IdentityUser> signInManager,
-        IOptions<AppSettings> appSettings1,
-        IConfiguration iConfig,
-        IOptions<JWTSettings> jwtsettings,
-        IUserLoginRepository userloginservice)
+        public LoginController(UserManager<IdentityUser> userManager,
+                               SignInManager<IdentityUser> signInManager,
+                               IOptions<AppSettings> appSettings1,
+                               IConfiguration iConfig,
+                               IOptions<JWTSettings> jwtsettings,
+                               IUserLoginRepository userloginservice)
         //IApiUserService apiUserService)
 
         {
@@ -56,7 +54,9 @@ namespace WebAPI.Controllers.UserAuth
 
         // POST: api/Users
         [HttpPost("/api/UserAuth/Login")]
-        public async Task<UserLogInResponse> Login([FromBody] UserLoginRequest user)
+        [ProducesResponseType(typeof(UserLogInResponse), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest user)
         {
 
             Microsoft.AspNetCore.Identity.SignInResult myResult = new Microsoft.AspNetCore.Identity.SignInResult();
@@ -72,34 +72,32 @@ namespace WebAPI.Controllers.UserAuth
                 myResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, lockoutOnFailure: false);
 
 
-                if (myResult.Succeeded)
-                {
-                    RefreshToken refreshToken = GenerateRefreshToken();
+                if (!myResult.Succeeded)
+                    return BadRequest("Failed to login");
 
-                    var tempUser1 = await _userManager.FindByNameAsync(user.Username);
 
-                    var myuser = await _userloginservice.GetUserDetailsAsync(tempUser1.Id);
+                RefreshToken refreshToken = GenerateRefreshToken();
 
-                    myuser.myRoles.Add(new Role() { Id = 1, RoleName = "Test" });
+                var tempUser1 = await _userManager.FindByNameAsync(user.Username);
 
-                    await _userloginservice.SaveRefreshTokenAsync(refreshToken, myuser.Id);
+                var myuser = await _userloginservice.GetUserDetailsAsync(tempUser1.Id);
 
-                    myUserLogInResponse.UserName = user.Username;
-                    myUserLogInResponse.UserEmail = tempUser1.Email;
-                    myUserLogInResponse.AccessToken = GenerateAccessToken(myuser.AspId, myuser.UserName, myuser.myRoles);
-                    myUserLogInResponse.RefreshToken = refreshToken.Token;
-                }
-                else
-                {
-                    myUserLogInResponse.BasicErrorHandler.HasError = true;
+                myuser.myRoles.Add(new Role() { Id = 1, RoleName = "Test" });
 
-                }
+                await _userloginservice.SaveRefreshTokenAsync(refreshToken, myuser.Id);
 
-                return myUserLogInResponse;
+                myUserLogInResponse.UserName = user.Username;
+                myUserLogInResponse.UserEmail = tempUser1.Email;
+                myUserLogInResponse.AccessToken = GenerateAccessToken(myuser.AspId, myuser.UserName, myuser.myRoles);
+                myUserLogInResponse.RefreshToken = refreshToken.Token;
+
+
+
+                return Ok(myUserLogInResponse);
 
             }
 
-            return myUserLogInResponse;
+            return Ok(myUserLogInResponse);
         }
 
 

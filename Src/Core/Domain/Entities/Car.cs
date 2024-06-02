@@ -20,7 +20,7 @@ public class Car : BaseAuditableEntity<int>
     public int? BranchId { get; set; }
     public Branch Branch { get; set; }
 
-    
+
     public required int CarModelId { get; set; }
     public CarModel CarModel { get; set; }
 

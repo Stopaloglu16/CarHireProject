@@ -2,13 +2,12 @@
 using Application.Aggregates.CarExtraAggregate.Commands.Update;
 using Application.Aggregates.CarExtraAggregate.Queries;
 using Application.Repositories;
-using Domain.Common;
 using Domain.Entities;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.CarExtraRepos;
+namespace CarHireInfrastructure.Repositories.CarExtraRepos;
 
 
 public class CarExtraRepository : EfCoreRepository<CarExtra, int>, ICarExtraRepository

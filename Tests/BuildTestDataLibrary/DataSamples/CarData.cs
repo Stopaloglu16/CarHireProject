@@ -1,5 +1,6 @@
 ﻿using Application.Aggregates.CarAggregate.Commands.Create;
 using Domain.Entities;
+using Domain.Enums;
 using System.Collections;
 
 namespace BuildTestDataLibrary.DataSamples;
@@ -12,7 +13,7 @@ public class CarListGenerator
     public static IEnumerable<Car> Creates =>
     new List<Car>
     {
-        new() { NumberPlates = CreatenumberPlate(), CarModelId = 1, Costperday = 20.5m, Mileage = 230 }
+        new() { NumberPlates = CreatenumberPlate(), CarModelId = 1, Costperday = 10.5m, Mileage = 0, GearboxId = Gearbox.Automatic }
     };
 
 
@@ -54,7 +55,7 @@ public class CarRequestGenerator : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         foreach (Car data in CarListGenerator.Creates)
-            yield return new object[] { new CreateCarRequest(data.NumberPlates, data.BranchId, data.CarModelId, (int)data.GearboxId, data.Mileage, data.Costperday) };
+            yield return new object[] { new CreateCarRequest(data.NumberPlates, data.BranchId, data.CarModelId, (Gearbox)data.GearboxId, data.Mileage, data.Costperday) };
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

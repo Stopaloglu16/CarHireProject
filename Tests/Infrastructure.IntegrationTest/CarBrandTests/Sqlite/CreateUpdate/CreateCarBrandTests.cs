@@ -1,8 +1,8 @@
 ﻿using BuildTestDataLibrary.DataSamples;
-using Infrastructure.Repositories.CarBrandRepos;
+using CarHireInfrastructure.Repositories.CarBrandRepos;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.IntegrationTest.CarBrandTests.Sqlite.CreateUpdate
+namespace CarHireInfrastructure.IntegrationTest.CarBrandTests.Sqlite.CreateUpdate
 {
     public class CreateCarBrandTests : TestBase
     {

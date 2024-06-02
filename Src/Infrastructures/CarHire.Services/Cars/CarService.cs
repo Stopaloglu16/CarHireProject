@@ -70,13 +70,13 @@ public class CarService : ICarService
         return await _carRepository.GetCarsByBranchId(branchId);
     }
 
-    public async Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
-    {
-        return await _carRepository.GetCarsByBrandId(brandId);
-    }
+    //public async Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
+    //{
+    //    return await _carRepository.GetCarsByBrandId(brandId);
+    //}
 
-    public async Task<IEnumerable<CarDto>> GetCarsByModelId(int modelId)
-    {
-        return await _carRepository.GetCarsByModelId(modelId);
-    }
+    //public async Task<IEnumerable<CarDto>> GetCarsByModelId(int modelId)
+    //{
+    //    return await _carRepository.GetCarsByModelId(modelId);
+    //}
 }

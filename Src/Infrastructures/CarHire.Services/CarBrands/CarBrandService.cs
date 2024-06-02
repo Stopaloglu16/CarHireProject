@@ -25,14 +25,10 @@ public class CarBrandService : ICarBrandService
         return new CreateCarBrandResponse(myReturn.Id, new Domain.Common.CustomErrorHandler());
     }
 
-    public async Task<CarBrandDto> GetCarBrandById(int Id)
-    {
-        return await _carBrandRepository.GetCarBrandById(Id);
-    }
 
-    public async Task<IEnumerable<SelectListItem>> GetCarBrandList()
+    public async Task<IEnumerable<SelectListItem>> GetCarBrandSelectList()
     {
-        return await _carBrandRepository.GetCarBrandList();
+        return await _carBrandRepository.GetCarBrandSelectList();
     }
 
     public async Task<IEnumerable<CarBrandDto>> GetCarBrands()

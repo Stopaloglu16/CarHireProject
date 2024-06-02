@@ -24,12 +24,12 @@ public class CarModelService : ICarModelService
 
     public async Task<IEnumerable<SelectListItem>> GetCarModelList()
     {
-        return await _carModelRepository.GetCarModelList();
+        return await _carModelRepository.GetCarModelSelectList();
     }
 
     public async Task<IEnumerable<SelectListItem>> GetCarModelListById(int carBrandId)
     {
-        return await _carModelRepository.GetCarModelListById(carBrandId);
+        return await _carModelRepository.GetCarModelSelectListById(carBrandId);
     }
 
     public async Task<IEnumerable<CarModelDto>> GetCarModels()

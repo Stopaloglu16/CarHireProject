@@ -1,10 +1,10 @@
 ﻿using Application.Aggregates.RoleAggregate.Queries;
 using Application.Repositories;
 using Domain.Entities.UserAggregate;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 
-namespace Infrastructure.Repositories.RoleGroupRepos;
+namespace CarHireInfrastructure.Repositories.RoleGroupRepos;
 
 public class RoleGroupRepository : EfCoreRepository<RoleGroup, int>, IRoleGroupRepository
 {

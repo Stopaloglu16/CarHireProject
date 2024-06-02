@@ -11,6 +11,5 @@ public record WebMenuDto : IMapFrom<WebMenu>
     public string LinkName { get; set; }
     public string LinkUrl { get; set; }
     public int MenuOrder { get; set; }
-    public int RoleId { get; set; }
     public string IconName { get; set; }
 }

@@ -1,17 +1,10 @@
-﻿using Domain.Entities.CarBrandsAggregate;
-using Domain.Entities.CarModelAggregate;
-using Infrastructure.Data;
-using Infrastructure.Repositories.CarBrandRepos;
-using Infrastructure.Repositories.CarModelRepos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Entities;
+using CarHireInfrastructure.Repositories.CarBrandRepos;
+using CarHireInfrastructure.Repositories.CarModelRepos;
 
-namespace Infrastructure.IntegrationTest.CarModelTests.Sqlite.CreateUpdate
+namespace CarHireInfrastructure.IntegrationTest.CarModelTests.Sqlite.CreateUpdate
 {
-    public class CreateCarModelTests: TestBase
+    public class CreateCarModelTests : TestBase
     {
         public CreateCarModelTests()
         {

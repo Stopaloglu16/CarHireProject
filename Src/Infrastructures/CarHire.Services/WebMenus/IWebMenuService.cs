@@ -6,5 +6,5 @@ public interface IWebMenuService
 {
     Task<IEnumerable<WebMenuDto>> GetHomeMenu();
 
-    Task<IEnumerable<WebMenuDto>> GetWebMenu(string userId);
+    //Task<IEnumerable<WebMenuDto>> GetWebMenu(string userId);
 }

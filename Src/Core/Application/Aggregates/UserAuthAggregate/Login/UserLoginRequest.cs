@@ -10,5 +10,5 @@ public record UserLoginRequest
     public required string Username { get; init; }
 
     [DataType(DataType.Password)]
-    public required string Password { get; init; }
+    public required string Password { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using Application.Aggregates.AddressAggregate.Queries;
-using Application.Aggregates.BranchAggregate.Commands.Create;
+﻿using Application.Aggregates.BranchAggregate.Commands.Create;
 using SharedFunctionLibrary;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,13 +15,7 @@ namespace Application.UnitTests.Application.Exception.CarrierExceptions
         {
             _createBranchRequest = new CreateBranchRequest()
             {
-                BranchName = carrierNameLong,
-                Address = new AddressDto()
-                {
-                    Address1 = "",
-                    City = "Derby",
-                    Postcode = "De12 3NS"
-                }
+                BranchName = carrierNameLong
             };
 
             Assert.False(ValidateClass.Validate(_createBranchRequest, out results));

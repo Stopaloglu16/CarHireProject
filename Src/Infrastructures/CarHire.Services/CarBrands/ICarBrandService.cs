@@ -6,11 +6,10 @@ namespace CarHire.Services.CarBrands;
 
 public interface ICarBrandService
 {
-    Task<CarBrandDto> GetCarBrandById(int Id);
 
     Task<IEnumerable<CarBrandDto>> GetCarBrands();
 
-    Task<IEnumerable<SelectListItem>> GetCarBrandList();
+    Task<IEnumerable<SelectListItem>> GetCarBrandSelectList();
 
     Task<CreateCarBrandResponse> Add(CreateCarBrandRequest carBrand);
 }

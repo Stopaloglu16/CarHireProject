@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (Id != branch.Id) return BadRequest(new UpdateBranchResponse(0, new BasicErrorHandler("Id not match")));
+                if (Id != branch.Id) return BadRequest( new CustomErrorHandler("Id not match"));
 
                 return await _branchService.UpdateBranch(branch);
             }

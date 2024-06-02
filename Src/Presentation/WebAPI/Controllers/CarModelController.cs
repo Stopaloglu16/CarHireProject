@@ -20,14 +20,6 @@ namespace WebAPI.Controllers
         }
 
 
-
-        //[HttpGet]
-        //public async Task<ActionResult<CarModelList>> Get()
-        //{
-        //    return await Mediator.Send(new GetCarModelsQuery());
-        //}
-
-
         [HttpGet("GetList")]
         public async Task<IEnumerable<SelectListItem>> GetList()
         {
@@ -75,7 +67,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (Id != branch.Id) return BadRequest(new UpdateCarModelResponse(0, new BasicErrorHandler("Id not match")));
+                if (Id != branch.Id) return BadRequest(new UpdateCarModelResponse(0, new CustomErrorHandler ("Id not match")));
 
                 return await _carModelService.Update(branch);
             }

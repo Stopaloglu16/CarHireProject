@@ -1,10 +1,8 @@
-﻿using Domain.Entities.CarBrandsAggregate;
-using Domain.Entities.CarModelAggregate;
-using Infrastructure.Repositories.CarBrandRepos;
-using Infrastructure.Repositories.CarModelRepos;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
+using CarHireInfrastructure.Repositories.CarBrandRepos;
+using CarHireInfrastructure.Repositories.CarModelRepos;
 
-namespace Infrastructure.IntegrationTest.CarModelTests.InMemory.CreateUpdate
+namespace CarHireInfrastructure.IntegrationTest.CarModelTests.InMemory.CreateUpdate
 {
     public class CreateCarModelTests : TestBase
     {
@@ -21,10 +19,11 @@ namespace Infrastructure.IntegrationTest.CarModelTests.InMemory.CreateUpdate
 
             var newCarBrand = await carBrandRepo.AddAsync(new CarBrand() { Name = "Toyota" });
 
-            var newCarModel = new CarModel() { 
-                CarBrandId = newCarBrand.Id, 
-                Name = name, 
-                CarPhotoLenght = 1000, 
+            var newCarModel = new CarModel()
+            {
+                CarBrandId = newCarBrand.Id,
+                Name = name,
+                CarPhotoLenght = 1000,
                 CarPhoto = "asdqwe",
                 SeatNumber = 5
             };

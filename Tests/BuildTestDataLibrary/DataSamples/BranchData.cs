@@ -9,9 +9,9 @@ public class BranchListGenerator
     public static IEnumerable<Branch> Creates =>
     new List<Branch>
     {
-        new() {  BranchName = "Derby", AddressId = 1 },
-        new() {  BranchName = "London", AddressId = 2 },
-        new() {  BranchName = "Leeds", AddressId = 3 }
+        new() {  BranchName = "Derby", Address1 = "123 Elm Street", City = "Derby", Postcode = "DE1 1AA" },
+        new() {  BranchName = "Leeds", Address1 = "456 Oak Avenue", City = "Leeds", Postcode = "LS1 2BB" },
+        new() {  BranchName = "London 1", Address1 = "789 Pine Road", City = "London", Postcode = "SW1A 1AA" }
     };
 }
 
@@ -35,7 +35,12 @@ public class BranchRequestGenerator : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         foreach (Branch data in BranchListGenerator.Creates)
-            yield return new object[] { new CreateBranchRequest() { BranchName = data.BranchName } };
+            yield return new object[] { new CreateBranchRequest() {
+                BranchName = data.BranchName,
+                Address1 = data.Address1,
+                City = data.City,
+                Postcode = data.Postcode
+            } };
     }
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

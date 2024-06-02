@@ -11,8 +11,8 @@ namespace Application.Repositories
     {
         Task<IEnumerable<CarModelDto>> GetCarModels();
         Task<CarModelDto> GetCarModelById(int Id);
-        Task<IEnumerable<SelectListItem>> GetCarModelList();
-        Task<IEnumerable<SelectListItem>> GetCarModelListById(int carBrandId);
+        Task<IEnumerable<SelectListItem>> GetCarModelSelectList();
+        Task<IEnumerable<SelectListItem>> GetCarModelSelectListById(int carBrandId);
         Task<IEnumerable<CarModelDto>> GetCarModelsByBrandId(int BrandId);
         Task<CreateCarModelResponse> CreateCarModel(CreateCarModelRequest createCarModelRequest);
         Task<UpdateCarModelResponse> UpdateCarModel(UpdateCarModelRequest updateCarModelRequest);

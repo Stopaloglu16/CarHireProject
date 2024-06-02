@@ -1,8 +1,8 @@
-﻿using Domain.Entities.CarBrandsAggregate;
-using Infrastructure.Repositories.CarBrandRepos;
+﻿using Domain.Entities;
+using CarHireInfrastructure.Repositories.CarBrandRepos;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.IntegrationTest.CarBrandTests.InMemory.CreateUpdate
+namespace CarHireInfrastructure.IntegrationTest.CarBrandTests.InMemory.CreateUpdate
 {
     public class CreateCarBrandTests : TestBase
     {

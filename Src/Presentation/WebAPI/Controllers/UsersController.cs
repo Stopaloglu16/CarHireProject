@@ -1,7 +1,9 @@
 ﻿using Application.Aggregates.UserAggregate.Commands;
 using Application.Aggregates.UserAggregate.Queries;
+using Application.Common.Models;
 using CarHire.Services.Users;
 using Domain.Common;
+using Domain.Interfaces;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,19 +12,20 @@ using System.Text;
 
 namespace WebAPI.Controllers
 {
-
     public class UsersController : ApiController
     {
-
         private readonly IUserService _userService;
         private readonly AppSettings _appSettings;
+        private readonly IEmailSender _emailSender;
 
-        public UsersController(IUserService userService, AppSettings appSettings)
+        public UsersController(IUserService userService, 
+                               AppSettings appSettings, 
+                               IEmailSender emailSender)
         {
             _userService = userService;
             _appSettings = appSettings;
+            _emailSender = emailSender;
         }
-
 
         [HttpGet]
         public async Task<IEnumerable<UserDto>> Get(bool IsActive, int UserTypeId)
@@ -43,8 +46,6 @@ namespace WebAPI.Controllers
         {
             return await _userService.GetUserById(Id);
         }
-
-
 
 
         [HttpPost]
@@ -75,7 +76,13 @@ namespace WebAPI.Controllers
                 var code = await EncryptDecrypt.EncryptAsyc(user.UserName, true, _appSettings.KeyEncrypte);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                if (myReturn.Id > 0) { SendEmail.SendRegister(user.UserEmail, user.UserName, code.ToString()); }
+                if (myReturn.id > 0)
+                {
+                    EmailRequest emailRequest = new() { FromMail = "" };
+                    //SendEmail.SendRegister(user.UserEmail, user.UserName, code.ToString());
+
+                    await _emailSender.SendEmailAsync(emailRequest);
+                }
 
                 return myReturn;
             }
@@ -84,6 +91,7 @@ namespace WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
         [HttpPost]
         [Route("CreateCustomer")]
@@ -113,8 +121,6 @@ namespace WebAPI.Controllers
         //        return BadRequest(ex.Message);
         //    }
         //}
-
-
 
     }
 }

@@ -1,17 +1,9 @@
-﻿using Domain.Entities.CarBrandsAggregate;
-using Domain.Entities.CarModelAggregate;
-using Infrastructure.Repositories.CarBrandRepos;
-using Infrastructure.Repositories.CarModelRepos;
+﻿using Domain.Entities;
+using CarHireInfrastructure.Repositories.CarModelRepos;
 using Microsoft.EntityFrameworkCore;
 using SharedFunctionLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace Infrastructure.IntegrationTest.CarModelTests.Sqlite.Exception
+namespace CarHireInfrastructure.IntegrationTest.CarModelTests.Sqlite.Exception
 {
     public class ExceptionCreateCarModelTests : TestBase
     {

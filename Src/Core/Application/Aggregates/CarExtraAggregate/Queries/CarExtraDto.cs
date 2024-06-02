@@ -1,9 +1,11 @@
-﻿namespace Application.Aggregates.CarExtraAggregate.Queries;
+﻿using Domain.Common.Mappings;
+using Domain.Entities;
 
-public record CarExtraDto
+namespace Application.Aggregates.CarExtraAggregate.Queries;
+
+public record CarExtraDto : IMapFrom<CarExtra>
 {
     public int Id { get; set; }
     public string Name { get; set; }
     public decimal Cost { get; set; }
-    public bool IsSelected { get; set; }
 }

@@ -3,13 +3,13 @@ using Application.Aggregates.CarHireLogAggregate.Queries;
 using Application.Repositories;
 using Dapper;
 using Domain.Entities;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Infrastructure.Repositories.CarHireRepos;
+namespace CarHireInfrastructure.Repositories.CarHireRepos;
 
 
 public class CarHireRepository : EfCoreRepository<CarHireLog, long>, ICarHireRepository
@@ -105,6 +105,11 @@ public class CarHireRepository : EfCoreRepository<CarHireLog, long>, ICarHireRep
 
     }
 
+    public Task<IEnumerable<CarHireCarDto>> GetAvailableCars(int pickupBranchId, DateTime pickupDate, int returnBranchId, DateTime returnDate)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IEnumerable<CarHireLogDto>> GetCarHiresByBranch(int branchId)
     {
         throw new NotImplementedException();
@@ -115,10 +120,7 @@ public class CarHireRepository : EfCoreRepository<CarHireLog, long>, ICarHireRep
         throw new NotImplementedException();
     }
 
-    public Task<bool> HireCar(int carId)
-    {
-        throw new NotImplementedException();
-    }
+
 
 
     //public async Task<IEnumerable<BranchDto>> GetBranches()

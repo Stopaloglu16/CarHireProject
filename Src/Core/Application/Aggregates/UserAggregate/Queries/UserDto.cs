@@ -8,7 +8,6 @@ public record UserDto : IMapFrom<User>
 {
     public int Id { get; init; }
     public string FullName { get; init; }
-    public string UserName { get; init; }
     public string UserEmail { get; init; }
     public int UserTypeId { get; init; }
     public string UserType { get; init; }
@@ -16,7 +15,6 @@ public record UserDto : IMapFrom<User>
     public string RoleGroup { get; init; }
 
     public string AspId { get; init; }
-
 
     public string RegisterToken { get; init; }
 
@@ -26,7 +24,8 @@ public record UserDto : IMapFrom<User>
     public void Mapping(Profile profile)
     {
         var c = profile.CreateMap<User, UserDto>()
-                    .ForMember(d => d.RoleUsers, opt => opt.Ignore());
+                    .ForMember(d => d.RoleUsers, opt => opt.Ignore())
+                    .ForMember(d => d.UserType, opt => opt.Ignore());
     }
 
 }

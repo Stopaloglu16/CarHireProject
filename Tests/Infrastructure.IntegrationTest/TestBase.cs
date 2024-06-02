@@ -1,12 +1,12 @@
 ﻿using BuildTestDataLibrary.DataSamples;
-using Infrastructure.Data;
-using Infrastructure.Repositories.CarBrandRepos;
-using Infrastructure.Repositories.CarExtraRepos;
-using Infrastructure.Repositories.CarModelRepos;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Repositories.CarBrandRepos;
+using CarHireInfrastructure.Repositories.CarExtraRepos;
+using CarHireInfrastructure.Repositories.CarModelRepos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Infrastructure.IntegrationTest
+namespace CarHireInfrastructure.IntegrationTest
 {
     public abstract class TestBase
     {
@@ -59,7 +59,6 @@ namespace Infrastructure.IntegrationTest
 
         public async Task SeedDatabase(ApplicationDbContext context)
         {
-
             var carExtraRepo = new CarExtraRepository(context);
             await carExtraRepo.AddRangeAsync(CarExtraListGenerator.Creates);
 
@@ -68,9 +67,6 @@ namespace Infrastructure.IntegrationTest
 
             var carModelRepo = new CarModelRepository(context);
             await carModelRepo.AddRangeAsync(CarModelListGenerator.Creates);
-
-
-
         }
 
     }

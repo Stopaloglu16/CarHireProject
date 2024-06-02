@@ -7,7 +7,7 @@ public record CarBrandDto : IMapFrom<CarBrand>
 {
     public CarBrandDto()
     {
-        
+
     }
 
     public int Id { get; set; }

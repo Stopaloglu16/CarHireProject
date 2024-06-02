@@ -10,8 +10,8 @@ namespace CarHire.Services.Cars
         Task<CarDto> GetCarDisplayById(int Id);
         Task<IEnumerable<CarDto>> GetCarsByBranchId(int BranchId);
 
-        Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId);
-        Task<IEnumerable<CarDto>> GetCarsByModelId(int modelId);
+        //Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId);
+        //Task<IEnumerable<CarDto>> GetCarsByModelId(int modelId);
         Task<CreateCarResponse> Add(CreateCarRequest createCarRequest);
         Task<UpdateCarResponse> Update(UpdateCarRequest updateCarRequest);
 

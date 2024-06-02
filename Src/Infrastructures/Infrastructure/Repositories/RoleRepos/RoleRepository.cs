@@ -1,9 +1,9 @@
 ﻿using Application.Repositories;
 using Domain.Entities.UserAggregate;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 
-namespace Infrastructure.Repositories.RoleRepos;
+namespace CarHireInfrastructure.Repositories.RoleRepos;
 
 
 public class RoleRepository : EfCoreRepository<Role, int>, IRoleRepository

@@ -7,11 +7,11 @@ using AutoMapper.QueryableExtensions;
 using Domain.Common;
 using Domain.Entities;
 using Domain.Enums;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.CarRepos;
+namespace CarHireInfrastructure.Repositories.CarRepos;
 
 public class CarRepository : EfCoreRepository<Car, int>, ICarRepository
 {
@@ -26,24 +26,6 @@ public class CarRepository : EfCoreRepository<Car, int>, ICarRepository
 
     public async Task<IEnumerable<CarDto>> GetCars()
     {
-
-        //return await GetListByBool(true).Include(bb => bb.CarModel)
-        //                                       .ThenInclude(cc => cc.CarBrand)
-        //                                       .Include(bb => bb.Branch)
-        //                                       //.Include(bb => bb.GearboxId)
-        //                                       .Select(ss => new CarDto
-        //                                       {
-        //                                           Id = ss.Id,
-        //                                           NumberPlates = ss.NumberPlates,
-        //                                           BranchId = ss.BranchId,
-        //                                           BranchName = ss.Branch.BranchName,
-        //                                           CarModelName = ss.CarModel.Name,
-        //                                           GearboxName = ((Gearbox)ss.GearboxId).ToString(),
-        //                                           Mileage = ss.Mileage,
-        //                                           Costperday = ss.Costperday
-        //                                       }).ToListAsync();
-
-
         return await GetListByBool(true).Include(bb => bb.CarModel)
                                                   .ThenInclude(cc => cc.CarBrand)
                                                   .Include(bb => bb.Branch)
@@ -64,24 +46,24 @@ public class CarRepository : EfCoreRepository<Car, int>, ICarRepository
 
 
 
-    public async Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
-    {
-        return await GetListByBool(true).Include(bb => bb.CarModel)
-                                                 .ThenInclude(cc => cc.CarBrand)
-                                                 .Include(bb => bb.Branch)
-                                                 .Where(bb => bb.CarModel.CarBrandId == brandId)
-                                                 .ProjectTo<CarDto>(_mapper.ConfigurationProvider).ToListAsync();
-    }
+    //public async Task<IEnumerable<CarDto>> GetCarsByBrandId(int brandId)
+    //{
+    //    return await GetListByBool(true).Include(bb => bb.CarModel)
+    //                                             .ThenInclude(cc => cc.CarBrand)
+    //                                             .Include(bb => bb.Branch)
+    //                                             .Where(bb => bb.CarModel.CarBrandId == brandId)
+    //                                             .ProjectTo<CarDto>(_mapper.ConfigurationProvider).ToListAsync();
+    //}
 
 
-    public async Task<IEnumerable<CarDto>> GetCarsByModelId(int modelId)
-    {
-        return await GetListByBool(true).Include(bb => bb.CarModel)
-                                                  .ThenInclude(cc => cc.CarBrand)
-                                                  .Include(bb => bb.Branch)
-                                                  .Where(bb => bb.CarModelId == modelId)
-                                                  .ProjectTo<CarDto>(_mapper.ConfigurationProvider).ToListAsync();
-    }
+    //public async Task<IEnumerable<CarDto>> GetCarsByModelId(int modelId)
+    //{
+    //    return await GetListByBool(true).Include(bb => bb.CarModel)
+    //                                              .ThenInclude(cc => cc.CarBrand)
+    //                                              .Include(bb => bb.Branch)
+    //                                              .Where(bb => bb.CarModelId == modelId)
+    //                                              .ProjectTo<CarDto>(_mapper.ConfigurationProvider).ToListAsync();
+    //}
 
 
     public async Task<CarDto> GetCarById(int Id)

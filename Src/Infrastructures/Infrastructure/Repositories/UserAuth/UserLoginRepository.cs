@@ -1,10 +1,10 @@
 ﻿using Application.Repositories;
 using Domain.Entities.UserAggregate;
 using Domain.Entities.UserAuthAggregate.Login;
-using Infrastructure.Data;
+using CarHireInfrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.UserAuth;
+namespace CarHireInfrastructure.Repositories.UserAuth;
 
 public class UserLoginRepository : IUserLoginRepository
 {

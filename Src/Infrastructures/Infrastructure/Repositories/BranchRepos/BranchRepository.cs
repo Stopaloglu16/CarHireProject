@@ -4,15 +4,16 @@ using Application.Aggregates.BranchAggregate.Queries;
 using Application.Repositories;
 using Domain.Entities;
 using Domain.Utilities;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.BranchRepos;
+namespace CarHireInfrastructure.Repositories.BranchRepos;
 
 public class BranchRepository : EfCoreRepository<Branch, int>, IBranchRepository
 {
     private readonly ApplicationDbContext _dbContext;
+
     public BranchRepository(ApplicationDbContext dbContext) : base(dbContext)
     {
         _dbContext = dbContext;
@@ -21,6 +22,7 @@ public class BranchRepository : EfCoreRepository<Branch, int>, IBranchRepository
 
     public async Task<IEnumerable<BranchDto>> GetBranches()
     {
+
         return await GetListByBool(true).Select(ss => new BranchDto
         {
             Id = ss.Id,
@@ -31,7 +33,7 @@ public class BranchRepository : EfCoreRepository<Branch, int>, IBranchRepository
         }).ToListAsync();
     }
 
-    public async Task<IEnumerable<SelectListItem>> GetBranchList()
+    public async Task<IEnumerable<SelectListItem>> GetBranchSelectList()
     {
         return await GetListByBool(true).Select(
                 ss => new SelectListItem(ss.Id, ss.BranchName)
@@ -64,7 +66,6 @@ public class BranchRepository : EfCoreRepository<Branch, int>, IBranchRepository
         }
 
         return branchDto;
-
     }
 
 
@@ -107,9 +108,6 @@ public class BranchRepository : EfCoreRepository<Branch, int>, IBranchRepository
 
             myBranchOrj.BranchName = updateBranchRequest.BranchName;
 
-            // var myTemp = myBranchOrj.Cars.ToList();
-
-
             foreach (var myCar in updateBranchRequest.carChosenValues)
             {
                 if (myCar.IsChosen)
@@ -150,20 +148,13 @@ public class BranchRepository : EfCoreRepository<Branch, int>, IBranchRepository
 
     public async Task<bool> SoftDeleteBranchById(int Id)
     {
-        try
-        {
-            var myBranchOrj = await GetByIdAsync(Id);
-            myBranchOrj.IsDeleted = 1;
+        var myBranchOrj = await GetByIdAsync(Id);
+        myBranchOrj.IsDeleted = 1;
 
-            _dbContext.Entry(myBranchOrj).State = EntityState.Modified;
+        _dbContext.Entry(myBranchOrj).State = EntityState.Modified;
 
-            await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            throw new Exception(ex.Message);
-        }
+        return true;
     }
 }

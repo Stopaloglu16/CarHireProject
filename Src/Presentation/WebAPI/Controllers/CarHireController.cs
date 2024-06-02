@@ -51,59 +51,61 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPut("CollectCar/{id}")]
-        public async Task<ActionResult<UpdateCarHireResponse>> CollectCar(int id, CollectCarHireCommand command)
-        {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("CollectCar/{id}")]
+        //public async Task<ActionResult<UpdateCarHireResponse>> CollectCar(int id, CollectCarHireCommand command)
+        //{
+        //    if (id != command.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return await Mediator.Send(command);
-        }
+        //    return await Mediator.Send(command);
+        //}
 
-        [HttpPut("ReturnCar/{id}")]
-        public async Task<ActionResult<UpdateCarHireResponse>> ReturnCar(int id, ReturnCarHireCommand command)
-        {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("ReturnCar/{id}")]
+        //public async Task<ActionResult<UpdateCarHireResponse>> ReturnCar(int id, ReturnCarHireCommand command)
+        //{
+        //    if (id != command.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            return await Mediator.Send(command);
-        }
-
-
-        [HttpPost("SetCarHireBookDisplay")]
-        public async Task<IActionResult> SetCarHireBookDisplay(CarHireBookDisplay myKeyValue)
-        {
-
-            var identity = (ClaimsIdentity)User.Identity;
-            var userId = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            await _cache.SetRecordAsync(userId, myKeyValue);
-
-            return Ok();
-        }
+        //    return await Mediator.Send(command);
+        //}
 
 
+        //[HttpPost("SetCarHireBookDisplay")]
+        //public async Task<IActionResult> SetCarHireBookDisplay(CarHireBookDisplay myKeyValue)
+        //{
 
-        [HttpGet("GetCarHireBookDisplay")]
-        public async Task<ActionResult<CarHireBookDisplay>> GetCarHireBookDisplay()
-        {
+        //    var identity = (ClaimsIdentity)User.Identity;
+        //    var userId = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (User == null) return BadRequest();
+        //    await _cache.SetRecordAsync(userId, myKeyValue);
 
-            var identity = (ClaimsIdentity)User.Identity;
+        //    return Ok();
+        //}
 
 
 
-            var userId = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        //[HttpGet("GetCarHireBookDisplay")]
+        //public async Task<ActionResult<CarHireBookDisplay>> GetCarHireBookDisplay()
+        //{
 
-            var carHireBookDisplay = await _cache.GetRecordAsync<CarHireBookDisplay>(userId);
+        //    if (User == null) return BadRequest();
 
-            return Ok(carHireBookDisplay);
-        }
+        //    var identity = (ClaimsIdentity)User.Identity;
+
+
+
+        //    var userId = identity.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+        //    var carHireBookDisplay = await _cache.GetRecordAsync<CarHireBookDisplay>(userId);
+
+        //    return Ok(carHireBookDisplay);
+        //}
+
+
     }
 
 }

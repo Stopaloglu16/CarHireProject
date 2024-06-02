@@ -23,7 +23,7 @@ public class BranchService : IBranchService
 
     public async Task<IEnumerable<SelectListItem>> GetBranchList()
     {
-        return await _branchRepository.GetBranchList();
+        return await _branchRepository.GetBranchSelectList();
     }
 
 

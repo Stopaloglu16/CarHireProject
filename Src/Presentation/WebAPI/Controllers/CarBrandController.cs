@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
         [HttpGet("GetList")]
         public async Task<IEnumerable<SelectListItem>> GetList()
         {
-            return await _carBrandService.GetCarBrandList();
+            return await _carBrandService.GetCarBrandSelectList();
         }
 
         //[HttpGet]

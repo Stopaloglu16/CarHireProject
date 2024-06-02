@@ -40,18 +40,18 @@ namespace WebAPI.Controllers
 
 
 
-        [HttpGet("GetByBrandModel/{brandId}/{modelId}")]
-        public async Task<IEnumerable<CarDto>> GetByBrandModel(int brandId, int modelId)
-        {
-            if (modelId == 0)
-            {
-                return await _carService.GetCarsByBrandId(brandId);
-            }
-            else
-            {
-                return await _carService.GetCarsByModelId(modelId);
-            }
-        }
+        //[HttpGet("GetByBrandModel/{brandId}/{modelId}")]
+        //public async Task<IEnumerable<CarDto>> GetByBrandModel(int brandId, int modelId)
+        //{
+        //    if (modelId == 0)
+        //    {
+        //        return await _carService.GetCarsByBrandId(brandId);
+        //    }
+        //    else
+        //    {
+        //        return await _carService.GetCarsByModelId(modelId);
+        //    }
+        //}
 
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                if (Id != car.Id) return BadRequest(new UpdateCarResponse(0, new BasicErrorHandler("Id not match")));
+                if (Id != car.Id) return BadRequest(new UpdateCarResponse(0, new CustomErrorHandler("Id not match")));
 
                 return await _carService.Update(car);
             }
@@ -81,9 +81,5 @@ namespace WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
-
     }
-
 }

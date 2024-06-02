@@ -1,9 +1,9 @@
 ﻿using Domain.Common;
 using Domain.Entities.UserAggregate;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
-
 
 public class CarHireLog : BaseAuditableEntity<long>
 {
@@ -18,12 +18,12 @@ public class CarHireLog : BaseAuditableEntity<long>
     public int PickUpBranchId { get; set; }
     public Branch PickUpBranch { get; set; }
 
-
     [Column(TypeName = "Date")]
     public DateTime PickUpDate { get; set; }
     public DateTime PickUpDateTime { get; set; }
     public bool PickUpConfirmed { get; set; } = false;
     public int PickupMileage { get; set; }
+
 
     [ForeignKey("ReturnBranch")]
     public int ReturnBranchId { get; set; }
@@ -33,8 +33,10 @@ public class CarHireLog : BaseAuditableEntity<long>
     public DateTime ReturnDate { get; set; }
     public DateTime ReturnDateTime { get; set; }
     public bool ReturnConfirmed { get; set; } = false;
-
     public int ReturnMileage { get; set; }
+
+    [Required]
+    [Column(TypeName = "decimal(18,2)")]
     public decimal BookingCost { get; set; }
 
 

@@ -25,36 +25,36 @@ public class WebMenuService : IWebMenuService
         throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<WebMenuDto>> GetWebMenu(string userId)
-    {
+    //public async Task<IEnumerable<WebMenuDto>> GetWebMenu(string userId)
+    //{
 
-        var myList = await _webmenuRepository.GetWebMenu();
-        var myWebMenu = new List<WebMenuDto>();
+    //    var myList = await _webmenuRepository.GetWebMenu();
+    //    var myWebMenu = new List<WebMenuDto>();
 
-        var myidd = _currentUserService.UserId;
+    //    var myidd = _currentUserService.UserId;
 
-        if (userId != null)
-        {
-            var user = await _userRepository.GetUserByAspId(userId);
+    //    if (userId != null)
+    //    {
+    //        var user = await _userRepository.GetUserByAspId(userId);
 
-            foreach (var item in myList)
-            {
-                if (user.RoleUsers.Any(cc => cc.Id == item.RoleId))
-                {
-                    myWebMenu.Add(item);
-                }
-            }
+    //        foreach (var item in myList)
+    //        {
+    //            if (user.RoleUsers.Any(cc => cc.Id == item.RoleId))
+    //            {
+    //                myWebMenu.Add(item);
+    //            }
+    //        }
 
-        }
+    //    }
 
-        foreach (var item in myList)
-        {
-            if (item.RoleId == 0)
-            {
-                myWebMenu.Add(item);
-            }
-        }
+    //    foreach (var item in myList)
+    //    {
+    //        if (item.RoleId == 0)
+    //        {
+    //            myWebMenu.Add(item);
+    //        }
+    //    }
 
-        return myWebMenu;
-    }
+    //    return myWebMenu;
+    //}
 }

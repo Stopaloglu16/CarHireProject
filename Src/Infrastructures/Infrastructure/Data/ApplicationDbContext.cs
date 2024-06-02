@@ -2,19 +2,19 @@
 using Domain.Common;
 using Domain.Entities;
 using Domain.Entities.UserAggregate;
-using Infrastructure.CommonModel;
+using CarHireInfrastructure.CommonModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection;
 
-namespace Infrastructure.Data;
+namespace CarHireInfrastructure.Data;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
 
     private readonly ICurrentUserService _currentUserService;
 
-    #nullable disable
+#nullable disable
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,
                                 ICurrentUserService currentUserService) : base(options)
     {
@@ -24,9 +24,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     //public ApplicationDbContext()
     //{
     //}
-    #nullable enable
+#nullable enable
 
-    
+
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Car> Cars { get; set; }
     public DbSet<CarBrand> CarBrands { get; set; }

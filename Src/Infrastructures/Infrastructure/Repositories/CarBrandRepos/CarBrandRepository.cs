@@ -2,11 +2,11 @@
 using Application.Repositories;
 using Domain.Entities;
 using Domain.Utilities;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.CarBrandRepos;
+namespace CarHireInfrastructure.Repositories.CarBrandRepos;
 
 public class CarBrandRepository : EfCoreRepository<CarBrand, int>, ICarBrandRepository
 {
@@ -25,10 +25,10 @@ public class CarBrandRepository : EfCoreRepository<CarBrand, int>, ICarBrandRepo
         return new CarBrandDto() { Id = carBrand.Id, Name = carBrand.Name };
     }
 
-    public async Task<IEnumerable<SelectListItem>> GetCarBrandList()
+    public async Task<IEnumerable<SelectListItem>> GetCarBrandSelectList()
     {
         return await GetListByBool(true).Select(ss => new SelectListItem(ss.Id, ss.Name))
-                                            .ToListAsync();
+                                               .ToListAsync();
     }
 
     public async Task<IEnumerable<CarBrandDto>> GetCarBrands()
@@ -37,7 +37,6 @@ public class CarBrandRepository : EfCoreRepository<CarBrand, int>, ICarBrandRepo
         {
             Id = ss.Id,
             Name = ss.Name
-
         }).ToListAsync();
     }
 }

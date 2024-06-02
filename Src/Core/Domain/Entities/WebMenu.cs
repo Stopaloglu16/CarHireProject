@@ -21,8 +21,6 @@ public class WebMenu : BaseEntity<int>
     [Column(TypeName = "varchar(150)")]
     public string LinkUrl { get; set; }
     public int MenuOrder { get; set; }
-    
-    //public int RoleId { get; set; }
 
     [Required]
     [Column(TypeName = "varchar(50)")]
@@ -30,5 +28,6 @@ public class WebMenu : BaseEntity<int>
 
     [Required]
     public int ButtonTypeId { get; set; }
+
 
 }

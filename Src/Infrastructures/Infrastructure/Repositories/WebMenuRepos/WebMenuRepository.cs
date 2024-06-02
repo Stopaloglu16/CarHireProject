@@ -1,11 +1,11 @@
 ﻿using Application.Aggregates.WebAggregate.Queries;
 using Application.Repositories;
 using Domain.Entities;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.WebMenuRepos;
+namespace CarHireInfrastructure.Repositories.WebMenuRepos;
 
 
 public class WebMenuRepository : EfCoreRepository<WebMenu, int>, IWebMenuRepository

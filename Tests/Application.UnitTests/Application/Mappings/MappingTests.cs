@@ -1,9 +1,10 @@
-﻿using Application.Aggregates.AddressAggregate.Queries;
-using Application.Aggregates.BranchAggregate.Queries;
+﻿using Application.Aggregates.BranchAggregate.Queries;
 using Application.Aggregates.CarAggregate.Queries;
 using Application.Aggregates.CarBrandAggregate.Queries;
+using Application.Aggregates.CarExtraAggregate.Queries;
 using Application.Aggregates.CarModelAggregate.Queries;
 using Application.Aggregates.UserAggregate.Queries;
+using Application.Aggregates.WebAggregate.Queries;
 using AutoMapper;
 using Domain.Common.Mappings;
 using Domain.Entities.UserAggregate;
@@ -34,11 +35,12 @@ namespace Application.UnitTests.Application.Mappings
 
         [Theory]
         [InlineData(typeof(Branch), typeof(BranchDto))]
+        [InlineData(typeof(Car), typeof(CarDto))]
+        [InlineData(typeof(CarExtra), typeof(CarExtraDto))]
         [InlineData(typeof(CarBrand), typeof(CarBrandDto))]
         [InlineData(typeof(CarModel), typeof(CarModelDto))]
-        [InlineData(typeof(Address), typeof(AddressDto))]
-        [InlineData(typeof(Car), typeof(CarDto))]
         [InlineData(typeof(User), typeof(UserDto))]
+        [InlineData(typeof(WebMenu), typeof(WebMenuDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = GetInstanceOf(source);

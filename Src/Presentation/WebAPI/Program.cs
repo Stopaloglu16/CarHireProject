@@ -4,8 +4,8 @@ using Application.Aggregates.CarBrandAggregate.Queries;
 using Application.Aggregates.CarHireAggregate.Commands.Create;
 using Application.Common.Interfaces;
 using Domain.Common;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -22,13 +22,34 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var sqliteConnectionString = builder.Configuration.GetConnectionString("SqliteConnection");
 
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                   options.UseSqlServer(connectionString));
+var provider = builder.Configuration.GetValue("Provider", "SqlServer");
 
-builder.Services.AddDbContext<WebIdentityContext>(options =>
-                 options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationDbContext>(options => _ = provider switch
+{
+    "Sqlite" => options.UseSqlite(sqliteConnectionString,
+    x => x.MigrationsAssembly(@"CarHireInfrastructure.SqliteMigrations")),
+
+    "SqlServer" => options.UseSqlServer(connectionString,
+    x => x.MigrationsAssembly(@"CarHireInfrastructure.SqlServerMigrations")),
+
+    _ => throw new Exception($"Unsupported provider: {provider}")
+});
+
+
+builder.Services.AddDbContext<WebIdentityContext>(options => _ = provider switch
+{
+    "Sqlite" => options.UseSqlite(sqliteConnectionString,
+    x => x.MigrationsAssembly(@"CarHireInfrastructure.SqliteMigrations")),
+
+    "SqlServer" => options.UseSqlServer(connectionString,
+    x => x.MigrationsAssembly(@"CarHireInfrastructure.SqlServerMigrations")),
+
+    _ => throw new Exception($"Unsupported provider: {provider}")
+});
+
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -41,16 +62,17 @@ builder.Services.AddMediatR(typeof(CreateCarHireCommand).Assembly);
 builder.Services.AddMediatR(typeof(GetCarBrandsQuery).Assembly);
 
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddScoped(typeof(IApplicationDbContext), typeof(ApplicationDbContext));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<WebIdentityContext>();
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(EfCoreRepository<>));
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfCoreRepository<,>));
 
 builder.Services.AddBlazorServices();
 
-
-
+builder.Services.AddHealthChecks();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -63,10 +85,8 @@ builder.Services.AddControllers();
 
     // configure strongly typed settings object
     services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-
     services.Configure<JWTSettings>(builder.Configuration.GetSection("JWTSettings"));
 }
-
 
 
 var jwtSettings = new JWTSettings();
@@ -121,7 +141,6 @@ var securityReq = new OpenApiSecurityRequirement
 var contact = new OpenApiContact()
 {
     Name = "Sertac Topaloglu",
-    Email = "sertac.topaloglu@hotmail.co.uk",
     Url = new Uri("https://sites.google.com/site/sertactopaloglu/home")
 };
 
@@ -143,8 +162,6 @@ builder.Services.AddSwaggerGen(o =>
     o.AddSecurityDefinition("Bearer", securityScheme);
     o.AddSecurityRequirement(securityReq);
 });
-
-
 
 
 
@@ -171,8 +188,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
 app.MapControllers();
+
+app.MapHealthChecks("/health");
 
 app.Run();
 

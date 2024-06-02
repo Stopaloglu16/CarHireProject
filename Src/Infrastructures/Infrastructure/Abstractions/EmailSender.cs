@@ -3,7 +3,7 @@ using Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Net.Mail;
 
-namespace Infrastructure.Abstractions;
+namespace CarHireInfrastructure.Abstractions;
 
 public class EmailSender : IEmailSender
 {
@@ -98,5 +98,5 @@ public class EmailSender : IEmailSender
         }
     }
 
-   
+
 }

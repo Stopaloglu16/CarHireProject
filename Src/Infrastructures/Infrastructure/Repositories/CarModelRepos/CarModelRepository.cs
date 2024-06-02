@@ -5,11 +5,11 @@ using Application.Repositories;
 using Domain.Common;
 using Domain.Entities;
 using Domain.Utilities;
-using Infrastructure.Data;
-using Infrastructure.Data.EfCore;
+using CarHireInfrastructure.Data;
+using CarHireInfrastructure.Data.EfCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories.CarModelRepos
+namespace CarHireInfrastructure.Repositories.CarModelRepos
 {
 
     public class CarModelRepository : EfCoreRepository<CarModel, int>, ICarModelRepository
@@ -48,7 +48,7 @@ namespace Infrastructure.Repositories.CarModelRepos
             }).ToListAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetCarModelList()
+        public async Task<IEnumerable<SelectListItem>> GetCarModelSelectList()
         {
             return await GetListByBool(true).Select(ss => new SelectListItem(ss.Id, ss.Name))
                                                   .ToListAsync();
@@ -67,7 +67,7 @@ namespace Infrastructure.Repositories.CarModelRepos
             }).ToListAsync();
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetCarModelListById(int carBrandId)
+        public async Task<IEnumerable<SelectListItem>> GetCarModelSelectListById(int carBrandId)
         {
             return await GetListByBool(true).Where(cc => cc.CarBrandId == carBrandId)
                                                   .Select(ss => new SelectListItem(ss.Id, ss.Name))
@@ -87,9 +87,9 @@ namespace Infrastructure.Repositories.CarModelRepos
             });
 
 
-            
+
             return new CreateCarModelResponse(myResponse.Id);
-            
+
         }
 
         public async Task<UpdateCarModelResponse> UpdateCarModel(UpdateCarModelRequest updateCarModelRequest)

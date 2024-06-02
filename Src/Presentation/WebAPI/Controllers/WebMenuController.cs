@@ -1,7 +1,5 @@
-﻿using Application.Aggregates.WebAggregate.Queries;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using CarHire.Services.WebMenus;
-using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
@@ -18,14 +16,15 @@ namespace WebAPI.Controllers
             _currentUserService = currentUserService;
         }
 
-        [HttpGet("WebMenu")]
-        public async Task<IEnumerable<WebMenuDto>> WebMenu()
-        {
+        //[HttpGet("WebMenu")]
+        //public async Task<IEnumerable<WebMenuDto>> WebMenu()
+        //{
 
-            var userId = _currentUserService.UserId;
+        //    var userId = _currentUserService.UserId;
 
 
-            return await _webmenuService.GetWebMenu(userId);
-        }
+        //    return await _webmenuService.GetWebMenu(userId);
+        //}
+
     }
 }

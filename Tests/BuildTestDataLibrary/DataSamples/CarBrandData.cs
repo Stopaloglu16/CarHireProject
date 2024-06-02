@@ -2,42 +2,40 @@
 using Domain.Entities;
 using System.Collections;
 
-namespace BuildTestDataLibrary.DataSamples
+namespace BuildTestDataLibrary.DataSamples;
+
+public class CarBrandListGenerator
 {
-    public class CarBrandListGenerator
+    public static IEnumerable<CarBrand> Creates =>
+    new List<CarBrand>
     {
-        public static IEnumerable<CarBrand> Creates =>
-        new List<CarBrand>
-        {
-            new() {  Name = "Toyota" },
-            new() {  Name = "BMW" },
-            new() {  Name = "Vauxhall" }
-        };
+        new() {  Name = "Toyota" },
+        new() {  Name = "BMW" },
+        new() {  Name = "Vauxhall" }
+    };
+}
+
+
+public class CarBrandGenerator : IEnumerable<object[]>
+{
+    public IEnumerator<object[]> GetEnumerator()
+    {
+        foreach (CarBrand data in CarBrandListGenerator.Creates)
+            yield return new object[] { data };
     }
 
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
 
-    public class CarBrandGenerator : IEnumerable<object[]>
+/// <summary>
+/// Create list of CreateCarBrandRequest data from generator
+/// </summary>
+public class CarBrandRequestGenerator : IEnumerable<object[]>
+{
+    public IEnumerator<object[]> GetEnumerator()
     {
-        public IEnumerator<object[]> GetEnumerator()
-        {
-            foreach (CarBrand data in CarBrandListGenerator.Creates)
-                yield return new object[] { data };
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        foreach (CarBrand data in CarBrandListGenerator.Creates)
+            yield return new object[] { new CreateCarBrandRequest() { BrandName = data.Name } };
     }
-
-    /// <summary>
-    /// Create list of CreateCarBrandRequest data from generator
-    /// </summary>
-    public class CarBrandRequestGenerator : IEnumerable<object[]>
-    {
-        public IEnumerator<object[]> GetEnumerator()
-        {
-            foreach (CarBrand data in CarBrandListGenerator.Creates)
-                yield return new object[] { new CreateCarBrandRequest() { BrandName = data.Name } };
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
-
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

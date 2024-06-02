@@ -7,16 +7,15 @@ using CarHire.Services.CarModelService;
 using CarHire.Services.Cars;
 using CarHire.Services.Users;
 using CarHire.Services.WebMenus;
-using Infrastructure.Repositories.AddressRepos;
-using Infrastructure.Repositories.BranchRepos;
-using Infrastructure.Repositories.CarBrandRepos;
-using Infrastructure.Repositories.CarExtraRepos;
-using Infrastructure.Repositories.CarHireRepos;
-using Infrastructure.Repositories.CarModelRepos;
-using Infrastructure.Repositories.CarRepos;
-using Infrastructure.Repositories.UserAuth;
-using Infrastructure.Repositories.UserRepos;
-using Infrastructure.Repositories.WebMenuRepos;
+using CarHireInfrastructure.Repositories.BranchRepos;
+using CarHireInfrastructure.Repositories.CarBrandRepos;
+using CarHireInfrastructure.Repositories.CarExtraRepos;
+using CarHireInfrastructure.Repositories.CarHireRepos;
+using CarHireInfrastructure.Repositories.CarModelRepos;
+using CarHireInfrastructure.Repositories.CarRepos;
+using CarHireInfrastructure.Repositories.UserAuth;
+using CarHireInfrastructure.Repositories.UserRepos;
+using CarHireInfrastructure.Repositories.WebMenuRepos;
 using WebAPI.Services;
 
 namespace WebAPI
@@ -40,7 +39,7 @@ namespace WebAPI
             services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<IBranchRepository, BranchRepository>();
-            services.AddScoped<IAddressRepository, AddressRepository>();
+          
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<ICarHireRepository, CarHireRepository>();
             services.AddScoped<ICarExtraRepository, CarExtraRepository>();

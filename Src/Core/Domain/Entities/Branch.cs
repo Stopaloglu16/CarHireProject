@@ -29,7 +29,7 @@ public class Branch : BaseAuditableEntity<int>
     [Column(TypeName = "varchar(10)")]
     public string? Postcode { get; set; }
 
-    
+
     /// <summary>
     /// Map to branch users
     /// </summary>
