@@ -53,12 +53,11 @@ namespace WebAPI.Controllers.UserAuth
 
 
         // POST: api/Users
-        [HttpPost("/api/UserAuth/Login")]
+        [HttpPost("/api/Login")]
         [ProducesResponseType(typeof(UserLogInResponse), 200)]
         [ProducesResponseType(typeof(BadRequestResult), 400)]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest user)
         {
-
             Microsoft.AspNetCore.Identity.SignInResult myResult = new Microsoft.AspNetCore.Identity.SignInResult();
             UserLogInResponse myUserLogInResponse = new UserLogInResponse();
 
@@ -67,7 +66,7 @@ namespace WebAPI.Controllers.UserAuth
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
 
-                user.Password = EncryptDecrypt.Decrypt(user.Password, true, _appSettings.KeyEncrypte);
+                //user.Password = EncryptDecrypt.Decrypt(user.Password, true, _appSettings.KeyEncrypte);
 
                 myResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, lockoutOnFailure: false);
 
@@ -90,8 +89,6 @@ namespace WebAPI.Controllers.UserAuth
                 myUserLogInResponse.UserEmail = tempUser1.Email;
                 myUserLogInResponse.AccessToken = GenerateAccessToken(myuser.AspId, myuser.UserName, myuser.myRoles);
                 myUserLogInResponse.RefreshToken = refreshToken.Token;
-
-
 
                 return Ok(myUserLogInResponse);
 

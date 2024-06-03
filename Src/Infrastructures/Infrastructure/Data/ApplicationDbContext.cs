@@ -34,6 +34,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<CarHireLog> CarHireLogs { get; set; }
     public DbSet<CarModel> CarModels { get; set; }
     public DbSet<Role> Roles { get; set; }
+    public DbSet<RoleGroup> RoleGroups { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<WebMenu> WebMenus { get; set; }

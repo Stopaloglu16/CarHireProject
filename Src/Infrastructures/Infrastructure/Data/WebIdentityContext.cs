@@ -14,10 +14,12 @@ public class WebIdentityContext : IdentityDbContext
     {
         base.OnModelCreating(builder);
 
-        if (!Database.IsSqlite())
-        {
-            SeedAdminUser(builder);
-        }
+        SeedAdminUser(builder);
+
+        //if (!Database.IsSqlite())
+        //{
+        //    SeedAdminUser(builder);
+        //}
     }
 
 

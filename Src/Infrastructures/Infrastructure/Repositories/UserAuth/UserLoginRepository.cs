@@ -40,7 +40,7 @@ public class UserLoginRepository : IUserLoginRepository
             UserLogInResponse userLogInResponse = new UserLogInResponse
             {
                 AspId = AspId,
-                //UserName = myuser.UserName,
+                UserName = myuser.UserEmail,
                 AccessToken = "",
                 RefreshToken = "",
                 UserEmail = myuser.UserEmail,

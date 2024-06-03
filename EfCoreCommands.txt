@@ -15,3 +15,5 @@ dotnet ef migrations add InitialCreate
 dotnet ef database update
 
 
+add-migration setup1 -context CarHireInfrastructure.Data.ApplicationDbContext -project Src\Infrastructures\CarHireInfrastructure.SqliteMigrations -Args "--Provider Sqlite"
+add-migration setup1 -context CarHireInfrastructure.Data.WebIdentityContext -project Src\Infrastructures\CarHireInfrastructure.SqliteMigrations -Args "--Provider Sqlite"
