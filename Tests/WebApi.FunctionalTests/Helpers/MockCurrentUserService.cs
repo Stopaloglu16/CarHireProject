@@ -14,4 +14,15 @@ namespace WebApi.FunctionalTests.Helpers
         public string UserId { get; }
         public string UserName { get; }
     }
+
+    //User email login
+    //"carhireadmin@hotmail.co.uk", "Admin@123"
+
+    public static class MockAdminUser
+    {
+        public static string UserEmail = "carhireadmin@hotmail.co.uk";
+        public static string Password = "Admin@123";
+    }
+
+    
 }

@@ -1,4 +1,5 @@
-﻿using CarHire.Services.UserAuths;
+﻿using Application.Aggregates.UserAggregate.Commands;
+using CarHire.Services.UserAuths;
 using Domain.Common;
 using Domain.Entities.UserAuthAggregate.Register;
 using Domain.Utilities;
@@ -36,7 +37,7 @@ namespace WebAPI.Controllers.UserAuth
         [HttpPost]
         [ProducesResponseType(typeof(UserRegisterResponse), 200)]
         [ProducesResponseType(typeof(BadRequestResult), 400)]
-        public async Task<IActionResult> RegisterUser([FromBody] UserRegisterRequest userRegister)
+        public async Task<IActionResult> CreateCustomerUser([FromBody] UserRegisterRequest userRegister)
         {
 
             UserRegisterResponse userRegisterResponse = new UserRegisterResponse(0);
@@ -73,41 +74,60 @@ namespace WebAPI.Controllers.UserAuth
                 }
 
                 return BadRequest("System issue");
-
             }
             else
             {
                 return BadRequest("User not found");
             }
-
         }
 
 
-        //public async Task<UserRegisterResponse> RegisterUser1(int _userId, string _UserName, string _UserEmail, string _UserPassword)
+      
+
+        //[HttpPost]
+        //[ProducesResponseType(typeof(string), 200)]
+        //[ProducesResponseType(typeof(BadRequestResult), 400)]
+        //public async Task<IActionResult> SignUpCustomerUser([FromQuery] string email)
         //{
-        //    var myIduser = new IdentityUser { UserName = _UserName, Email = _UserEmail };
 
-        //    _UserPassword = UtilityClass.Decrypt(_UserPassword, true, _appSettings.KeyEncrypte);
-        //    myIduser.EmailConfirmed = true;
+        //    UserRegisterResponse userRegisterResponse = new UserRegisterResponse(0);
 
-        //    var result = await _userManager.CreateAsync(myIduser, _UserPassword);
+        //    var myUser = await _userregisterservice.GetUserByAsync(username, tokenConfirm);
 
-        //    if (result.Succeeded)
+        //    if (myUser != null)
         //    {
-        //        await _userregisterservice.UpdateUserAsync(_userId, myIduser.Id);
 
-        //        return new UserRegisterResponse(_userId, new BasicErrorHandler());
+        //        DateTime myNow = DateTime.Now;
+        //        int tt = myNow.Subtract(myUser.RegisterTokenValid).Days;
+
+        //        if (tt >= 1)
+        //            return BadRequest("Token is expired");
+
+
+        //        var myIduser = new IdentityUser { UserName = username, Email = myUser.UserEmail };
+
+        //        myIduser.EmailConfirmed = true;
+
+        //        var result = await _userManager.CreateAsync(myIduser, password);
+
+        //        if (result.Succeeded)
+        //        {
+        //            await _userregisterservice.UpdateUserAsync(myUser.Id, myIduser.Id);
+
+        //            return Ok(new UserRegisterResponse(myUser.Id));
+        //        }
+
+        //        foreach (var error in result.Errors)
+        //        {
+        //            return BadRequest(error.Description);
+        //        }
+
+        //        return BadRequest("System issue");
         //    }
         //    else
         //    {
-        //        foreach (var error in result.Errors)
-        //        {
-        //            return new UserRegisterResponse(0, new BasicErrorHandler(error.Description));
-        //        }
-
-        //        return new UserRegisterResponse(0, new BasicErrorHandler("Error"));
+        //        return BadRequest("User not found");
         //    }
-
         //}
 
 

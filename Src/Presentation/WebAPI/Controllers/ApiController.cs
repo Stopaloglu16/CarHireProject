@@ -1,10 +1,13 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    //[Authorize]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [ApiController]
     public abstract class ApiController : ControllerBase
     {

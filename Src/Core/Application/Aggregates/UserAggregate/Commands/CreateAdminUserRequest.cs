@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Aggregates.UserAggregate.Commands;
 
-public class CreateAdminUserRequest : CreateUserRequest
+public record CreateAdminUserRequest : CreateUserRequest
 {
     public CreateAdminUserRequest()
     {
-        UserTypeId = (int)UserType.AdminUser;
         UserType = UserType.AdminUser;
     }
 

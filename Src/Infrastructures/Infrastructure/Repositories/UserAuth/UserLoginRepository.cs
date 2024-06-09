@@ -9,22 +9,25 @@ namespace CarHireInfrastructure.Repositories.UserAuth;
 public class UserLoginRepository : IUserLoginRepository
 {
 
-    private readonly ApplicationDbContext _DbContext;
+    private readonly ApplicationDbContext _dbContext;
 
     public UserLoginRepository(ApplicationDbContext dbContext)
     {
-        _DbContext = dbContext;
+        _dbContext = dbContext;
     }
 
     public async Task<UserLogInResponse> GetUserDetailsAsync(string AspId)
     {
         try
         {
-            var myuser = await _DbContext.Users.Where(uu => uu.AspId == AspId)
+            var myuser = await _dbContext.Users.Where(uu => uu.AspId == AspId)
                                                       .Include(uu => uu.RoleUsers)
                                                       .FirstOrDefaultAsync();
 
-            var myRoles = _DbContext.Roles.ToList();
+            if (myuser == null)
+                throw new ArgumentNullException("Not found user");
+
+            //var myRoles = _dbContext.Roles.ToList();
 
             //List<Role> roles = new List<Role>();
 
@@ -44,7 +47,8 @@ public class UserLoginRepository : IUserLoginRepository
                 AccessToken = "",
                 RefreshToken = "",
                 UserEmail = myuser.UserEmail,
-                Id = myuser.Id
+                Id = myuser.Id,
+                UserType = myuser.UserTypeId
                 //myRoles = roles,
                 //pnErrorHandler = new PnErrorHandler()
             };
@@ -61,7 +65,7 @@ public class UserLoginRepository : IUserLoginRepository
 
     public async Task<bool> SaveRefreshTokenAsync(RefreshToken refreshToken, int _UserId)
     {
-        _DbContext.RefreshTokens.Add(
+        _dbContext.RefreshTokens.Add(
                    new RefreshToken
                    {
                        UserId = _UserId,
@@ -69,7 +73,7 @@ public class UserLoginRepository : IUserLoginRepository
                        ExpiryDate = refreshToken.ExpiryDate
                    });
 
-        await _DbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
 
         return true;
     }

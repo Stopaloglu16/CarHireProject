@@ -1,64 +1,41 @@
 ﻿using Application.Common.Models;
 using Domain.Interfaces;
-using Microsoft.Extensions.Logging;
-using System.Net.Mail;
+using mailinator_csharp_client;
+using mailinator_csharp_client.Models.Messages.Entities;
+using mailinator_csharp_client.Models.Messages.Requests;
+using mailinator_csharp_client.Models.Responses;
 
 namespace CarHireInfrastructure.Abstractions;
 
 public class EmailSender : IEmailSender
 {
-    private readonly ILogger<EmailSender> _logger;
 
-    public EmailSender(ILogger<EmailSender> logger)
+    private readonly string _emailApiTokenKey;
+    private readonly MailinatorClient _mailinatorClient;
+    private readonly string _mailinatorDomain;
+
+    public EmailSender(string emailApiTokenKey, string mailinatorDomain)
     {
-        _logger = logger;
+        _emailApiTokenKey = emailApiTokenKey;
+        _mailinatorClient = new MailinatorClient(emailApiTokenKey);
+        _mailinatorDomain = mailinatorDomain;
     }
 
     public async Task SendEmailAsync(EmailRequest request)
     {
-
+        await Task.Delay(100);
         //Chaging to https://www.mailinator.com
-
-        var emailClient = new SmtpClient("localhost");
-
-        var message = new MailMessage
-        {
-            From = new MailAddress(request.FromMail),
-            Subject = request.Subject,
-            Body = request.Body
-        };
-
-        foreach (string to in request.ToMail)
-        {
-            message.To.Add(new MailAddress(to));
-        }
-
-        //TODO:EmailService if there was error, try at least three times. 
-        try
-        {
-            await emailClient.SendMailAsync(message);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "CleanArchitecture EmailService: Unhandled Exception for Request {@Request}", request);
-        }
-
-        _logger.LogWarning($"Sending email to {request.ToMail} from {request.FromMail} with subject {request.Subject}.");
-
+        throw new NotImplementedException();
     }
 
 
-    public static void SendRegister(string Useremail, string Username, string SystemCode)
+
+    public async Task SendRegisterEmailAsync(string Username, string To, string Token)
     {
         try
         {
-            //Chaging to https://www.mailinator.com
-
-            System.Net.Mail.MailMessage myMailMessage = new System.Net.Mail.MailMessage();
-            myMailMessage.From = new MailAddress("No-Reply@business.co.uk");
-            myMailMessage.To.Add("testemail@hotmail.com");
-
-            //myMailMessage.To.Add(Useremail);
+            //Test system to change logic!
+            //Send emails to mailinator system
 
             string MessageBody = "";
 
@@ -68,35 +45,28 @@ public class EmailSender : IEmailSender
                                 "</style></head><body>";
 
             MessageBody = " <table style='width:50%;'><tbody><tr><td> <img  style='width:10%;' src='https://localhost:7056/img/carhire.jpeg'> </td></tr>" +
-                            "<tr><td> <h2> <span class='welcometxt'>Welcome to Portalnow!</span></h2></td></tr>" +
-                            "<tr><td>Click below to verify your account.</br> <a href='https://localhost:7056/register/" + Username + "/" + SystemCode + "'>here</a></td></tr>" +
+                            "<tr><td> <h2> <span class='welcometxt'>Welcome to CarHire! 🚗</span></h2></td></tr>" +
+                            "<tr><td>Click below to verify your account.</br> <a href='https://localhost:7056/register/" + Username + "/" + Token + "'>here</a></td></tr>" +
                             "<tr><td>Username: </br>" + Username + "</td></tr>" +
                             "</tbody></table>";
-
 
             string HtmlEnd = "</body></html>";
 
 
-            myMailMessage.Subject = "Welcome to carhire";
+            MessageToPost messageToPost = new MessageToPost()
+            {
+                Subject = "Welcome to Carhire",
+                From = "noreply@carhire.com",  //To email on live system
+                Text = HtmlBegin + MessageBody + HtmlEnd
+            };
 
-            myMailMessage.Body = HtmlBegin + MessageBody + HtmlEnd;
-            myMailMessage.IsBodyHtml = true;
-
-
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = "test.server.co.uk";
-            smtp.UseDefaultCredentials = true;
-            //smtp.EnableSsl = true;
-            //smtp.Port = 587;
-
-            smtp.Send(myMailMessage);
+            PostMessageRequest postMessageRequest = new PostMessageRequest() { Domain = _mailinatorDomain, Inbox = _mailinatorDomain, Message = messageToPost };
+            PostMessageResponse postMessageResponse = await _mailinatorClient.MessagesClient.PostMessageAsync(postMessageRequest);
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            ;
+            throw new Exception("SendRegisterEmailAsync " + ex.Message);
         }
     }
-
-
 }

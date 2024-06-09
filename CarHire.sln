@@ -51,9 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi.FunctionalTests", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarHire.Services", "Src\Infrastructures\CarHire.Services\CarHire.Services.csproj", "{9DEB557D-2408-460F-8A9E-8244690AC4F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarHireInfrastructure.SqliteMigrations", "Src\Infrastructures\CarHireInfrastructure.SqliteMigrations\CarHireInfrastructure.SqliteMigrations.csproj", "{26885D5B-76B6-4058-8276-338DC97A840D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarHireInfrastructure.SqliteMigrations", "Src\Infrastructures\CarHireInfrastructure.SqliteMigrations\CarHireInfrastructure.SqliteMigrations.csproj", "{26885D5B-76B6-4058-8276-338DC97A840D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarHireInfrastructure.SqlServerMigrations", "Src\Infrastructures\CarHireInfrastructure.SqlServerMigrations\CarHireInfrastructure.SqlServerMigrations.csproj", "{02DDC660-D538-47E7-90F5-A50618D87B45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarHireInfrastructure.SqlServerMigrations", "Src\Infrastructures\CarHireInfrastructure.SqlServerMigrations\CarHireInfrastructure.SqlServerMigrations.csproj", "{02DDC660-D538-47E7-90F5-A50618D87B45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

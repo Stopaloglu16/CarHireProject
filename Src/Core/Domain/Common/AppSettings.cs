@@ -2,6 +2,7 @@
 
 public class AppSettings
 {
-    public string? ApiAddressForDatabase { get; set; }
+    public string? MailinatorApiToken { get; set; }
+    public string? MailinatorDomain { get; set; }
     public string? KeyEncrypte { get; set; }
 }

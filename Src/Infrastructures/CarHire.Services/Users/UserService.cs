@@ -32,19 +32,21 @@ public class UserService : IUserService
 
     public async Task<CreateUserResponse> AddAdminUser(CreateAdminUserRequest createUserRequest)
     {
-        var myReturn = await _userRepository.AddAsync(new User()
+
+        var newUser = new User()
         {
             FullName = createUserRequest.FullName,
             UserEmail = createUserRequest.UserEmail,
-            //UserName = createUserRequest.UserName,
             RoleGroupId = createUserRequest.RoleGroupId,
             UserTypeId = (int)UserType.AdminUser,
-            AspId = createUserRequest.AspId
-        });
+            RegisterTokenValid = DateTime.UtcNow.AddHours(2)
+        };
+
+        var myReturn = await _userRepository.AddAsync(newUser);
 
         if (myReturn == null) throw new ArgumentNullException("Not saved");
 
-        return new CreateUserResponse(myReturn.Id);
+        return new CreateUserResponse(myReturn.RegisterToken);
     }
 
     public async Task<CreateUserResponse> AddBranchUser(CreateBrancUserRequest createUserRequest)
@@ -54,7 +56,6 @@ public class UserService : IUserService
          {
              FullName = createUserRequest.FullName,
              UserEmail = createUserRequest.UserEmail,
-             //UserName = createUserRequest.UserName,
              BranchId = createUserRequest.BranchId,
              RoleGroupId = createUserRequest.RoleGroupId,
              UserTypeId = UserType.BranchUser
@@ -62,7 +63,7 @@ public class UserService : IUserService
 
         if (myReturn == null) throw new ArgumentNullException("Not saved");
 
-        return new CreateUserResponse(myReturn.Id);
+        return new CreateUserResponse(myReturn.RegisterToken);
     }
 
     public async Task<CreateUserResponse> AddCustomerUser(CreateCustomerUserRequest createUserRequest)
@@ -72,14 +73,12 @@ public class UserService : IUserService
          {
              FullName = createUserRequest.FullName,
              UserEmail = createUserRequest.UserEmail,
-             //UserName = createUserRequest.UserName,
-             RoleGroupId = createUserRequest.RoleGroupId,
              UserTypeId = UserType.Customer
          });
 
         if (myReturn == null) throw new ArgumentNullException("Not saved");
 
-        return new CreateUserResponse(myReturn.Id);
+        return new CreateUserResponse(myReturn.RegisterToken);
     }
 
     public Task<UserLogInResponse> GetUserByAccessTokenAsync(string accessToken)

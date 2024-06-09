@@ -1,4 +1,5 @@
 ﻿using Domain.Entities.UserAggregate;
+using Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities.UserAuthAggregate.Login;
@@ -13,6 +14,8 @@ public class UserLogInResponse
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
     public string AspId { get; set; }
+
+    public UserType  UserType { get; set; } 
 
     public ICollection<Role> myRoles { get; set; } = new List<Role>();
 

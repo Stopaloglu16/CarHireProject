@@ -2,6 +2,7 @@
 using Domain.Common;
 using Domain.Entities.UserAggregate;
 using Domain.Entities.UserAuthAggregate.Login;
+using Domain.Enums;
 using Domain.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -63,31 +64,30 @@ namespace WebAPI.Controllers.UserAuth
 
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-
                 //user.Password = EncryptDecrypt.Decrypt(user.Password, true, _appSettings.KeyEncrypte);
 
                 myResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, true, lockoutOnFailure: false);
 
-
                 if (!myResult.Succeeded)
                     return BadRequest("Failed to login");
 
-
                 RefreshToken refreshToken = GenerateRefreshToken();
 
-                var tempUser1 = await _userManager.FindByNameAsync(user.Username);
+                var aspUser = await _userManager.FindByNameAsync(user.Username);
 
-                var myuser = await _userloginservice.GetUserDetailsAsync(tempUser1.Id);
+                var webUser = await _userloginservice.GetUserDetailsAsync(aspUser.Id);
 
-                myuser.myRoles.Add(new Role() { Id = 1, RoleName = "Test" });
+                if (webUser == null)
+                    return BadRequest("Not registered user");
 
-                await _userloginservice.SaveRefreshTokenAsync(refreshToken, myuser.Id);
+                if( webUser.UserType == UserType.AdminUser)
+                    webUser.myRoles.Add(new Role() { Id = 1, RoleName = "usermanage" });
+
+                await _userloginservice.SaveRefreshTokenAsync(refreshToken, webUser.Id);
 
                 myUserLogInResponse.UserName = user.Username;
-                myUserLogInResponse.UserEmail = tempUser1.Email;
-                myUserLogInResponse.AccessToken = GenerateAccessToken(myuser.AspId, myuser.UserName, myuser.myRoles);
+                myUserLogInResponse.UserEmail = aspUser.Email;
+                myUserLogInResponse.AccessToken = GenerateAccessToken(webUser.AspId, webUser.UserName, webUser.myRoles);
                 myUserLogInResponse.RefreshToken = refreshToken.Token;
 
                 return Ok(myUserLogInResponse);

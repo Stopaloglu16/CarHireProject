@@ -15,6 +15,14 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using WebAPI;
 using WebAPI.Model;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc;
+using Application.Repositories;
+using CarHireInfrastructure.Repositories.UserRepos;
+using Domain.Interfaces;
+using CarHireInfrastructure.Abstractions;
+using mailinator_csharp_client;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +78,10 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkSto
 
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(EfCoreRepository<,>));
 
+
+
+
+
 builder.Services.AddBlazorServices();
 
 builder.Services.AddHealthChecks();
@@ -79,6 +91,17 @@ builder.Services.AddControllers();
 
 
 
+var apiVersioningBuilder = builder.Services.AddApiVersioning(o =>
+{
+o.AssumeDefaultVersionWhenUnspecified = true;
+o.DefaultApiVersion = new ApiVersion(1, 0);
+o.ReportApiVersions = true;
+o.ApiVersionReader = ApiVersionReader.Combine(
+    new QueryStringApiVersionReader("api-version"),
+    new HeaderApiVersionReader("X-Version"),
+    new MediaTypeApiVersionReader("ver"));
+});
+
 // Add JWT token logic
 {
     var services = builder.Services;
@@ -87,6 +110,16 @@ builder.Services.AddControllers();
     services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
     services.Configure<JWTSettings>(builder.Configuration.GetSection("JWTSettings"));
 }
+
+
+var appSettings = new AppSettings();
+builder.Configuration.Bind(nameof(AppSettings), appSettings);
+
+//Email sender setup
+builder.Services.AddTransient<IEmailSender>(provider =>
+{
+    return new EmailSender(appSettings.MailinatorApiToken, appSettings.MailinatorDomain);
+});
 
 
 var jwtSettings = new JWTSettings();

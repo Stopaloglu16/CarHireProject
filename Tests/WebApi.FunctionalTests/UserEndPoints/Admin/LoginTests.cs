@@ -1,18 +1,5 @@
-﻿using CarHire.Services.Users;
-using CarHireInfrastructure.Data;
-using Domain.Entities.UserAggregate;
-using Domain.Entities.UserAuthAggregate.Login;
-using Domain.Enums;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Domain.Entities.UserAuthAggregate.Login;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using WebApi.FunctionalTests.Helpers;
 
 namespace WebApi.FunctionalTests.UserEndPoints.Admin
@@ -27,7 +14,6 @@ namespace WebApi.FunctionalTests.UserEndPoints.Admin
         {
             _factory = factory;
             _httpClient = factory.CreateClient();
-            //_factory.RunMigrations();
             _factory.RunApiUserMigrations();
             _bearerToken = "";
         }
@@ -37,14 +23,13 @@ namespace WebApi.FunctionalTests.UserEndPoints.Admin
         public async Task PostAdminLogin_ValidValues_LoginSuccess(string userName, string email, string password)
         {
 
-            using (var scope = _factory.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetService<ApplicationDbContext>();
+            //using (var scope = _factory.Services.CreateScope())
+            //{
+            //    var db = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-                var myuu = db.Users.ToList();
-                await db.SaveChangesAsync();
-
-            }
+            //    var myuu = db.Users.ToList();
+            //    await db.SaveChangesAsync();
+            //}
 
 
             UserLoginRequest userLoginRequest = new() { Username = userName, Password = password };
@@ -56,15 +41,8 @@ namespace WebApi.FunctionalTests.UserEndPoints.Admin
 
             var apiLoginResponse = await responseApiLogin.Content.ReadFromJsonAsync<UserLogInResponse>();
 
-            _bearerToken = apiLoginResponse.AccessToken;
-
+            Assert.NotNull(apiLoginResponse.AccessToken);
         }
-
-
-
-
     }
-
-
 }
 
