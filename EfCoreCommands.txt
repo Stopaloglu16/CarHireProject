@@ -19,18 +19,3 @@ add-migration FixAspId -context CarHireInfrastructure.Data.ApplicationDbContext 
 add-migration setup1 -context CarHireInfrastructure.Data.WebIdentityContext -project Src\Infrastructures\CarHireInfrastructure.SqliteMigrations -Args "--Provider Sqlite"
 
 add-migration FixAspId -context CarHireInfrastructure.Data.ApplicationDbContext -project Src\Infrastructures\CarHireInfrastructure.SqlServerMigrations -Args "--Provider SqlServer"
-
-{
-  "username": "carhireadmin@hotmail.co.uk",
-  "password": "Admin@123"
-}
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiI0MDhmZDdhNS1jZTQzLTRjOGEtOWI3ZC01NzJlMzY0YzE5NDMiLCJnaXZlbl9uYW1lIjoiY2FyaGlyZWFkbWluQGhvdG1haWwuY28udWsiLCJyb2xlIjoidXNlcm1hbmFnZSIsIm5iZiI6MTcxNzk0MTY5NSwiZXhwIjoxNzE4MDI4MDk1LCJpYXQiOjE3MTc5NDE2OTV9.TTXhUo2Xcmg-xUm_coOdTlXkTaNiAtfiaQkz0MFb7Bw
-
-
-{
-  "fullName": "adam adam",
-  "userEmail": "adam@carhire.co.uk",
-  "userType": 0,
-  "roleGroupId": 1
-}

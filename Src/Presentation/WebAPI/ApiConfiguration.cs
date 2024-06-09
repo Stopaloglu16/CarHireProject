@@ -5,6 +5,7 @@ using CarHire.Services.CarBrands;
 using CarHire.Services.CarExtras;
 using CarHire.Services.CarModelService;
 using CarHire.Services.Cars;
+using CarHire.Services.UserAuths;
 using CarHire.Services.Users;
 using CarHire.Services.WebMenus;
 using CarHireInfrastructure.Repositories.BranchRepos;
@@ -47,6 +48,10 @@ namespace WebAPI
             services.AddScoped<ICarModelRepository, CarModelRepository>();
             services.AddScoped<IWebMenuRepository, WebMenuRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IUserRegisterService, UserRegisterService>();
+            services.AddScoped<IUserRegisterRepository, UserRegisterRepository>();
+
 
             return services;
         }

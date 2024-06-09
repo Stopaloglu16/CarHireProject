@@ -6,21 +6,21 @@ namespace CarHire.Services.UserAuths;
 public class UserRegisterService : IUserRegisterService
 {
 
-    private readonly IUserRegisterRepository _dbRepository;
+    private readonly IUserRegisterRepository _userRegisterRepository;
 
-    public UserRegisterService(IUserRegisterRepository productRepository)
+    public UserRegisterService(IUserRegisterRepository userRegisterRepository)
     {
-        _dbRepository = productRepository;
+        _userRegisterRepository = userRegisterRepository;
     }
 
 
     public async Task<User> GetUserByAsync(string Username, string Token)
     {
-        return await _dbRepository.GetUserByAsync(Username, Token);
+        return await _userRegisterRepository.GetUserByAsync(Username, Token);
     }
 
     public async Task<bool> UpdateUserAsync(int UserId, string AspId)
     {
-        return await _dbRepository.UpdateUserAsync(UserId, AspId);
+        return await _userRegisterRepository.UpdateUserAsync(UserId, AspId);
     }
 }

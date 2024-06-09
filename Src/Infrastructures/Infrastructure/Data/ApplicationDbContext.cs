@@ -6,6 +6,7 @@ using CarHireInfrastructure.CommonModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CarHireInfrastructure.Data;
 
@@ -91,26 +92,29 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         if (_currentUserService != null)
         {
-            var userId = _currentUserService.UserId;
-
-            foreach (var entry in ChangeTracker.Entries<BaseAuditableEntity<int>>())
+            if(!_currentUserService.UserId.IsNullOrEmpty() && !_currentUserService.UserName.IsNullOrEmpty())
             {
-                Console.WriteLine(entry.State);
+                var userId = _currentUserService.UserId;
 
-                switch (entry.State)
+                foreach (var entry in ChangeTracker.Entries<BaseAuditableEntity<int>>())
                 {
-                    case EntityState.Added:
-                        entry.Entity.CreatedBy = _currentUserService.UserName; // _currentUserService.UserId;
-                        entry.Entity.Created = DateTime.Now; // _dateTime.Now;
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.LastModifiedBy = _currentUserService.UserName; // _currentUserService.UserId;
-                        entry.Entity.LastModified = DateTime.Now;// _dateTime.Now;
-                        break;
-                }
-            }
+                    Console.WriteLine(entry.State);
 
-            OnBeforeSaveChanges(userId);
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.Entity.CreatedBy = _currentUserService.UserName; // _currentUserService.UserId;
+                            entry.Entity.Created = DateTime.Now; // _dateTime.Now;
+                            break;
+                        case EntityState.Modified:
+                            entry.Entity.LastModifiedBy = _currentUserService.UserName; // _currentUserService.UserId;
+                            entry.Entity.LastModified = DateTime.Now;// _dateTime.Now;
+                            break;
+                    }
+                }
+
+                OnBeforeSaveChanges(userId);
+            }
 
         }
 

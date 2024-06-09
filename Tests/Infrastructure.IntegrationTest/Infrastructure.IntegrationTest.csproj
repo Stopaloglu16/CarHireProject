@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <UserSecretsId>dfa61476-b396-4549-bf07-25e509e05e91</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +34,12 @@
 
   <ItemGroup>
     <Folder Include="CarModelTests\InMemory\Exception\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
